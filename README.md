@@ -13,7 +13,7 @@ Table of contents
 Clone and initialisation
 ========================
 
-If you do not attempt to contribute to the repository, simply clone it:
+If you do not attempt to contribute to this repository, simply clone it:
 ```
 git clone git@github.com:recotoolsbenchmarks/DelphesNtuplizer.git
 ```
@@ -41,13 +41,13 @@ cmsenv
 cd ..
 git clone https://github.com/delphes/delphes.git
 cd delphes
-cp libDelphes.so ..
 git checkout tags/3.4.2pre17
 ./configure
 sed -i -e 's/c++0x/c++1y/g' Makefile
 make -j 10
+cp libDelphes.so ..
 ```
-Make a dummy test that Delphes runs properly on GEN-SIM samples (once few events have been processed you can stop processing with CTRL+C):
+Make a dummy test to check Delphes runs properly on GEN-SIM samples (once few events have been processed you can stop processing with CTRL+C):
 
 ```
 ./DelphesCMSFWLite cards/gen_card.tcl test_gensim.root /eos/cms/store/relval/CMSSW_10_3_0/RelValZMM_13/GEN-SIM-RECO/PU25ns_103X_upgrade2018_realistic_v7-v1/10000/50FEF759-6699-7344-82CE-894E8A724442.root
@@ -89,4 +89,3 @@ The following command will produce a flat Ntuple, with 10 events.
 ``` 
 python bin/Ntuplizer.py -i delphes/delphes.root -o flat_tree.root -n 10
 ```
-
