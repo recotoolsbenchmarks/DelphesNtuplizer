@@ -5,13 +5,14 @@ This package allows you to produce to flat Ntuples from Delphes PhaseII samples.
 
 Table of contents
 =================
-  * [Clone and initialisation](#clone-and-initilisation)
+  * [Clone](#clone)
+  * [Initialisation](#initilisation)
   * [Produce validation Delphes samples](#producing-delphes)
   * [Produce Delphes Flat trees](#producing-flatrees)
 
 
-Clone and initialisation
-========================
+Clone 
+=====
 
 If you do not attempt to contribute to this repository, simply clone it:
 ```
@@ -32,9 +33,14 @@ git fetch upstream && git merge upstream/master
 If you want to submit a new feature to ```recotoolsbenchmarks/DelphesNtuplizer``` you have to do it via pull-request (PR):
 So, first commit and push your changes to ```YOURGITUSERNAME/DelphesNtuplizer``` and then make a PR via the github interface. 
 
+
+Initialisation
+==============
+
 This package requires Delphes to be installed, and CMSSW for gcc, ROOT, FWLite and other dependencies:
 
 ```
+cd DelphesNtuplizer
 cmsrel CMSSW_10_0_5
 cd CMSSW_10_0_5
 cmsenv
@@ -70,7 +76,7 @@ As a result, the output size increases substantially compared to normal Delphes 
 To produce Delphes validation samples run this command (by changing the appropiate input GEN-SIM file of interest): 
 
 ```
-./DelphesCMSFWLite ../cards/CMS_PhaseII_200PU_v04VAL.tcl delphes_input.root /eos/cms/store/relval/CMSSW_10_3_0/RelValZMM_13/GEN-SIM-RECO/PU25ns_103X_upgrade2018_realistic_v7-v1/10000/50FEF759-6699-7344-82CE-894E8A724442.root
+./DelphesCMSFWLite ../cards/CMS_PhaseII_200PU_v04VAL.tcl delphes.root /eos/cms/store/relval/CMSSW_10_3_0/RelValZMM_13/GEN-SIM-RECO/PU25ns_103X_upgrade2018_realistic_v7-v1/10000/50FEF759-6699-7344-82CE-894E8A724442.root
 ```
 
 Produce Delphes flat trees
