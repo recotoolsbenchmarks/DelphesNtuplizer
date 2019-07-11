@@ -13,6 +13,7 @@ class TreeProducer:
 
          # flat tree branches
          self.debug = debug
+
          self.t = ROOT.TTree( "mytree","TestTree" )
          self.maxn = 9999
 
@@ -89,8 +90,6 @@ class TreeProducer:
          self.jet_phi          = array( 'f', self.maxn*[ 0. ] )
          self.jet_mass         = array( 'f', self.maxn*[ 0. ] )
          self.jet_idpass       = array( 'i', self.maxn*[ 0 ] )
-         self.jet_bmva         = array( 'f', self.maxn*[ 0. ] )
-         self.jet_DeepCSV      = array( 'f', self.maxn*[ 0. ] )
          self.jet_DeepJET      = array( 'f', self.maxn*[ 0. ] )
          self.jet_btag         = array( 'i', self.maxn*[ 0 ] )
 
@@ -171,8 +170,6 @@ class TreeProducer:
          self.t.Branch( "jet_phi",self.jet_phi, "jet_phi[jet_size]/F")
          self.t.Branch( "jet_mass",self.jet_mass, "jet_mass[jet_size]/F")
          self.t.Branch( "jet_idpass",self. jet_idpass, "jet_idpass[jet_size]/i")
-         self.t.Branch( "jet_bmva",self.jet_bmva, "jet_bmva[jet_size]/F")
-         self.t.Branch( "jet_DeepCSV",self.jet_DeepCSV,"jet_DeepCSV[jet_size]/F")
          self.t.Branch( "jet_DeepJET",self.jet_DeepJET,"jet_DeepJET[jet_size]/F")
          self.t.Branch( "jet_btag",self.jet_btag,"jet_btag[jet_size]/I")
 
@@ -394,11 +391,9 @@ class TreeProducer:
 
             #### BTagging
 
-            self.jet_bmva [i] = 0.  ## some dummy value
-            self.jet_DeepCSV [i] = 0.  ## some dummy value
             self.jet_DeepJET [i] = 0.  ## some dummy value
 
-            for j in range(6):
+            for j in range(3):
                 if ( item.BTag & (1 << j) ):
                     self.jet_btag[i] |= 1 << j
 
@@ -552,7 +547,8 @@ def main():
         treeProducer.fill()
 
     out_root = ROOT.TFile(outputFile,"RECREATE")
-    out_root.cd()
+    out_root.mkdir("myana")
+    out_root.cd("myana")
     treeProducer.write()
  
 
