@@ -503,9 +503,13 @@ class TreeProducer:
             self.tau_decaymode  [i]  = 0. # dummy for now, has to be implemented in Delphes
             self.tau_reliso     [i]  = 0. # dummy for now, has to be implemented in Delphes
 
-            ## Tau-Tagging (for now only cut based ID, corresponds to 1st BIT in Delphes) ### TO BE FIXED !!!
+            ## Tau-Tagging (including the 4WPs cut based)
             if ( item.TauTag & (1 << 0) ):
                 self.tau_isopass    [i] |= 1 << 0
+
+            for j in range(4):
+                if ( item.tau_isopass & (1 << j) ):
+                    self.tau_isopass[i] |= 1 << j
 
             i += 1
         self.tau_size[0] = i
