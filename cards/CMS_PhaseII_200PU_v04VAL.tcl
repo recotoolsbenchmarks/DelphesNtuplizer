@@ -131,7 +131,11 @@ set ExecutionPath {
   TauTaggingAK8DNNMedium
   TauTaggingAK8DNNTight
 
-  TauTaggingPUPPICutBased
+  TauTaggingPUPPICutBasedLoose
+  TauTaggingPUPPICutBasedMedium
+  TauTaggingPUPPICutBasedTight
+  TauTaggingPUPPICutBasedVeryTight
+
   TauTaggingPUPPIDNNMedium
   TauTaggingPUPPIDNNTight
 
@@ -3899,7 +3903,7 @@ module TauTagging TauTaggingAK8DNNTight {
 
 
 
-
+##############################################################
 module TauTagging TauTaggingPUPPICutBased {
   set ParticleInputArray Delphes/allParticles
   set PartonInputArray Delphes/partons
@@ -3918,11 +3922,108 @@ module TauTagging TauTaggingPUPPICutBased {
   add EfficiencyFormula {0}  { (abs(eta) < 2.3) * ((( -0.00621816+0.00130097*pt-2.19642e-5*pt^2+1.49393e-7*pt^3-4.58972e-10*pt^4+5.27983e-13*pt^5 )) * (pt<250) + 0.0032*(pt>250)) + \
                                (abs(eta) > 2.3) * (0.000)
                              }
-  add EfficiencyFormula {15} { (abs(eta) < 2.3) * 0.97*0.77*( (0.32 + 0.01*pt - 0.000054*pt*pt )*(pt<100)+0.78*(pt>100) ) + \
+  add EfficiencyFormula {15} { (abs(eta) < 2.3) * 0.97*0.77*( (0.32 + 0.01*pt - 0.000054*pt*pt )*(pt<=100)+0.78*(pt>100) ) + \
                                (abs(eta) > 2.3) * (0.000)
                              }
 }
 
+#############################################################
+module TauTagging TauTaggingPUPPICutBasedLoose {
+  set ParticleInputArray Delphes/allParticles
+  set PartonInputArray Delphes/partons
+  set JetInputArray JetEnergyScalePUPPI/jets
+
+  set DeltaR 0.5
+
+  set TauPTMin 20.0
+
+  set TauEtaMax 2.4
+
+  set BitNumber 0
+
+  # add EfficiencyFormula {abs(PDG code)} {efficiency formula as a function of eta and pt}
+
+  add EfficiencyFormula {0}  { (abs(eta) < 2.4) * ((( -0.00621816+0.00130097*pt-2.19642e-5*pt^2+1.49393e-7*pt^3-4.58972e-10*pt^4+5.27983e-13*pt^5 )) * (pt<250) + 0.0032*(pt>250)) + \
+                               (abs(eta) > 2.4) * (0.000)
+                             }
+  add EfficiencyFormula {15} { (abs(eta) < 2.4) * (0.60) + \
+                               (abs(eta) > 2.4) * (0.000)
+                             }
+}
+
+#############################################################
+module TauTagging TauTaggingPUPPICutBasedMedium {
+  set ParticleInputArray Delphes/allParticles
+  set PartonInputArray Delphes/partons
+  set JetInputArray JetEnergyScalePUPPI/jets
+
+  set DeltaR 0.5
+
+  set TauPTMin 20.0
+
+  set TauEtaMax 2.4
+
+  set BitNumber 1
+
+  # add EfficiencyFormula {abs(PDG code)} {efficiency formula as a function of eta and pt}
+
+  add EfficiencyFormula {0}  { (abs(eta) < 2.4) * 0.7*((( -0.00621816+0.00130097*pt-2.19642e-5*pt^2+1.49393e-7*pt^3-4.58972e-10*pt^4+5.27983e-13*pt^5 )) * (pt<250) + 0.0032*(pt>250)) + \
+                               (abs(eta) > 2.4) * (0.000)
+                             }
+  add EfficiencyFormula {15} { (abs(eta) < 2.4) * (0.55) + \
+                               (abs(eta) > 2.4) * (0.000)
+                             }
+}
+
+
+#############################################################
+module TauTagging TauTaggingPUPPICutBasedTight {
+  set ParticleInputArray Delphes/allParticles
+  set PartonInputArray Delphes/partons
+  set JetInputArray JetEnergyScalePUPPI/jets
+
+  set DeltaR 0.5
+
+  set TauPTMin 20.0
+
+  set TauEtaMax 2.4
+
+  set BitNumber 2
+
+  # add EfficiencyFormula {abs(PDG code)} {efficiency formula as a function of eta and pt}
+
+  add EfficiencyFormula {0}  { (abs(eta) < 2.4) * 0.25*((( -0.00621816+0.00130097*pt-2.19642e-5*pt^2+1.49393e-7*pt^3-4.58972e-10*pt^4+5.27983e-13*pt^5 )) * (pt<250) + 0.0032*(pt>250)) + \
+                               (abs(eta) > 2.4) * (0.000)
+                             }
+  add EfficiencyFormula {15} { (abs(eta) < 2.4) * (0.55) + \
+                               (abs(eta) > 2.4) * (0.000)
+                             }
+}
+
+
+#############################################################
+module TauTagging TauTaggingPUPPICutBasedVeryTight {
+  set ParticleInputArray Delphes/allParticles
+  set PartonInputArray Delphes/partons
+  set JetInputArray JetEnergyScalePUPPI/jets
+
+  set DeltaR 0.5
+
+  set TauPTMin 20.0
+
+  set TauEtaMax 2.4
+
+  set BitNumber 3
+
+  # add EfficiencyFormula {abs(PDG code)} {efficiency formula as a function of eta and pt}
+
+  add EfficiencyFormula {0}  { (abs(eta) < 2.4) * 0.15*((( -0.00621816+0.00130097*pt-2.19642e-5*pt^2+1.49393e-7*pt^3-4.58972e-10*pt^4+5.27983e-13*pt^5 )) * (pt<250) + 0.0032*(pt>250)) + \
+                               (abs(eta) > 2.4) * (0.000)
+                             }
+  add EfficiencyFormula {15} { (abs(eta) < 2.4) * (0.55) + \
+                               (abs(eta) > 2.4) * (0.000)
+                             }
+}
 
 module TauTagging TauTaggingPUPPIDNNMedium {
   set ParticleInputArray Delphes/allParticles
@@ -3935,7 +4036,7 @@ module TauTagging TauTaggingPUPPIDNNMedium {
 
   set TauEtaMax 3.0
 
-  set BitNumber 1
+  set BitNumber 4
 
   # add EfficiencyFormula {abs(PDG code)} {efficiency formula as a function of eta and pt}
   add EfficiencyFormula {0} { 
@@ -4040,8 +4141,8 @@ module TauTagging TauTaggingPUPPIDNNTight {
 
   set TauEtaMax 3.0
 
-  set BitNumber 2
-
+  set BitNumber 5
+  
   # add EfficiencyFormula {abs(PDG code)} {efficiency formula as a function of eta and pt}
   add EfficiencyFormula {0} { 
                                   (abs(eta) > 0.00 && abs(eta) <= 0.50) * (pt >  20.00 && pt <=  30.00) * (0.0005) +
@@ -4371,13 +4472,11 @@ module StatusPidFilter GenParticleFilter {
 }
 
 
-##################
+####################
 # ROOT tree writer
-##################
+####################
 
 module TreeWriter TreeWriter {
-
-
 
 # add Branch InputArray BranchName BranchClass
   #add Branch GenParticleFilter/filteredParticles Particle GenParticle
