@@ -85,7 +85,6 @@ class TreeProducer:
          self.tau_charge       = array( 'i', self.maxn*[ 0 ] )
          self.tau_decaymode    = array( 'f', self.maxn*[ 0. ] )
          self.tau_reliso       = array( 'f', self.maxn*[ 0. ] )
-         self.tau_isofunction  = array( 'f', self.maxn*[ 0. ] )
          self.tau_isopass      = array( 'i', self.maxn*[ 0 ] )
 
          self.jetpuppi_size         = array( 'i', [ 0 ] )
@@ -182,7 +181,6 @@ class TreeProducer:
          self.t.Branch( "tau_charge",self.tau_charge, "tau_charge[tau_size]/I")
          self.t.Branch( "tau_decaymode",self.tau_decaymode, "tau_decaymode[tau_size]/F")
          self.t.Branch( "tau_reliso",self.tau_reliso, "tau_reliso[tau_size]/F")
-         self.t.Branch( "tau_isofunction",self.tau_isofunction, "tau_isofunction[tau_size]/F")
          self.t.Branch( "tau_isopass",self. tau_isopass, "tau_isopass[tau_size]/i")
 
          self.t.Branch( "jetpuppi_size",self.jetpuppi_size, "jetpuppi_size/I")
@@ -504,7 +502,6 @@ class TreeProducer:
             self.tau_charge     [i]  = item.Charge
             self.tau_decaymode  [i]  = 0. # dummy for now, has to be implemented in Delphes
             self.tau_reliso     [i]  = 0. # dummy for now, has to be implemented in Delphes
-            self.tau_isofunction[i]  = 0. # dummy for now, has to be implemented in Delphes
 
             ## Tau-Tagging (for now only cut based ID, corresponds to 1st BIT in Delphes) ### TO BE FIXED !!!
             if ( item.TauTag & (1 << 0) ):
