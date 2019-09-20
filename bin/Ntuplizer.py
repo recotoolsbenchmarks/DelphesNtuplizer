@@ -41,6 +41,10 @@ class TreeProducer:
          self.genjet_phi       = array( 'f', self.maxn*[ 0. ] )
          self.genjet_mass      = array( 'f', self.maxn*[ 0. ] )
 
+         self.genmet_size      = array( 'i', [ 0 ] )
+         self.genmet_pt        = array( 'f', self.maxn*[ 0. ] )
+         self.genmet_phi       = array( 'f', self.maxn*[ 0. ] )
+
          self.gamma_size       = array( 'i', [ 0 ] )
          self.gamma_pt         = array( 'f', self.maxn*[ 0. ] )
          self.gamma_eta        = array( 'f', self.maxn*[ 0. ] )
@@ -81,21 +85,33 @@ class TreeProducer:
          self.tau_charge       = array( 'i', self.maxn*[ 0 ] )
          self.tau_decaymode    = array( 'f', self.maxn*[ 0. ] )
          self.tau_reliso       = array( 'f', self.maxn*[ 0. ] )
-         self.tau_isofunction  = array( 'f', self.maxn*[ 0. ] )
          self.tau_isopass      = array( 'i', self.maxn*[ 0 ] )
 
-         self.jet_size         = array( 'i', [ 0 ] )
-         self.jet_pt           = array( 'f', self.maxn*[ 0. ] )
-         self.jet_eta          = array( 'f', self.maxn*[ 0. ] )
-         self.jet_phi          = array( 'f', self.maxn*[ 0. ] )
-         self.jet_mass         = array( 'f', self.maxn*[ 0. ] )
-         self.jet_idpass       = array( 'i', self.maxn*[ 0 ] )
-         self.jet_DeepJET      = array( 'f', self.maxn*[ 0. ] )
-         self.jet_btag         = array( 'i', self.maxn*[ 0 ] )
+         self.jetpuppi_size         = array( 'i', [ 0 ] )
+         self.jetpuppi_pt           = array( 'f', self.maxn*[ 0. ] )
+         self.jetpuppi_eta          = array( 'f', self.maxn*[ 0. ] )
+         self.jetpuppi_phi          = array( 'f', self.maxn*[ 0. ] )
+         self.jetpuppi_mass         = array( 'f', self.maxn*[ 0. ] )
+         self.jetpuppi_idpass       = array( 'i', self.maxn*[ 0 ] )
+         self.jetpuppi_DeepJET      = array( 'f', self.maxn*[ 0. ] )
+         self.jetpuppi_btag         = array( 'i', self.maxn*[ 0 ] )
 
-         self.met_size         = array( 'i', [ 0 ] )
-         self.met_pt           = array( 'f', self.maxn*[ 0. ] )
-         self.met_phi          = array( 'f', self.maxn*[ 0. ] )
+         self.jetchs_size         = array( 'i', [ 0 ] )
+         self.jetchs_pt           = array( 'f', self.maxn*[ 0. ] )
+         self.jetchs_eta          = array( 'f', self.maxn*[ 0. ] )
+         self.jetchs_phi          = array( 'f', self.maxn*[ 0. ] )
+         self.jetchs_mass         = array( 'f', self.maxn*[ 0. ] )
+         self.jetchs_idpass       = array( 'i', self.maxn*[ 0 ] )
+         self.jetchs_DeepJET      = array( 'f', self.maxn*[ 0. ] )
+         self.jetchs_btag         = array( 'i', self.maxn*[ 0 ] )
+
+         self.metpuppi_size         = array( 'i', [ 0 ] )
+         self.metpuppi_pt           = array( 'f', self.maxn*[ 0. ] )
+         self.metpuppi_phi          = array( 'f', self.maxn*[ 0. ] )
+
+         self.metpf_size         = array( 'i', [ 0 ] )
+         self.metpf_pt           = array( 'f', self.maxn*[ 0. ] )
+         self.metpf_phi          = array( 'f', self.maxn*[ 0. ] )
 
          # declare tree branches
          self.t.Branch( "evt_size",self.evt_size, "evt_size/I")
@@ -120,6 +136,10 @@ class TreeProducer:
          self.t.Branch( "genjet_eta",self.genjet_eta, "genjet_eta[genjet_size]/F")
          self.t.Branch( "genjet_phi",self.genjet_phi, "genjet_phi[genjet_size]/F")
          self.t.Branch( "genjet_mass",self.genjet_mass, "genjet_mass[genjet_size]/F")
+
+         self.t.Branch( "genmet_size",self.genmet_size, "genmet_size/I")
+         self.t.Branch( "genmet_pt",self.genmet_pt, "genmet_pt[genmet_size]/F")
+         self.t.Branch( "genmet_phi",self.genmet_phi, "genmet_phi[genmet_size]/F")
 
          self.t.Branch( "gamma_size",self.gamma_size, "gamma_size/I")
          self.t.Branch( "gamma_pt",self.gamma_pt, "gamma_pt[gamma_size]/F")
@@ -161,21 +181,33 @@ class TreeProducer:
          self.t.Branch( "tau_charge",self.tau_charge, "tau_charge[tau_size]/I")
          self.t.Branch( "tau_decaymode",self.tau_decaymode, "tau_decaymode[tau_size]/F")
          self.t.Branch( "tau_reliso",self.tau_reliso, "tau_reliso[tau_size]/F")
-         self.t.Branch( "tau_isofunction",self.tau_isofunction, "tau_isofunction[tau_size]/F")
          self.t.Branch( "tau_isopass",self. tau_isopass, "tau_isopass[tau_size]/i")
 
-         self.t.Branch( "jet_size",self.jet_size, "jet_size/I")
-         self.t.Branch( "jet_pt",self.jet_pt, "jet_pt[jet_size]/F")
-         self.t.Branch( "jet_eta",self.jet_eta, "jet_eta[jet_size]/F")
-         self.t.Branch( "jet_phi",self.jet_phi, "jet_phi[jet_size]/F")
-         self.t.Branch( "jet_mass",self.jet_mass, "jet_mass[jet_size]/F")
-         self.t.Branch( "jet_idpass",self. jet_idpass, "jet_idpass[jet_size]/i")
-         self.t.Branch( "jet_DeepJET",self.jet_DeepJET,"jet_DeepJET[jet_size]/F")
-         self.t.Branch( "jet_btag",self.jet_btag,"jet_btag[jet_size]/I")
+         self.t.Branch( "jetpuppi_size",self.jetpuppi_size, "jetpuppi_size/I")
+         self.t.Branch( "jetpuppi_pt",self.jetpuppi_pt, "jetpuppi_pt[jetpuppi_size]/F")
+         self.t.Branch( "jetpuppi_eta",self.jetpuppi_eta, "jetpuppi_eta[jetpuppi_size]/F")
+         self.t.Branch( "jetpuppi_phi",self.jetpuppi_phi, "jetpuppi_phi[jetpuppi_size]/F")
+         self.t.Branch( "jetpuppi_mass",self.jetpuppi_mass, "jetpuppi_mass[jetpuppi_size]/F")
+         self.t.Branch( "jetpuppi_idpass",self. jetpuppi_idpass, "jetpuppi_idpass[jetpuppi_size]/i")
+         self.t.Branch( "jetpuppi_DeepJET",self.jetpuppi_DeepJET,"jetpuppi_DeepJET[jetpuppi_size]/F")
+         self.t.Branch( "jetpuppi_btag",self.jetpuppi_btag,"jetpuppi_btag[jetpuppi_size]/I")
 
-         self.t.Branch( "met_size",self.met_size, "met_size/I")
-         self.t.Branch( "met_pt",self. met_pt, "met_pt[met_size]/F")
-         self.t.Branch( "met_phi",self.met_phi, "met_phi[met_size]/F")
+         self.t.Branch( "jetchs_size",self.jetchs_size, "jetchs_size/I")
+         self.t.Branch( "jetchs_pt",self.jetchs_pt, "jetchs_pt[jetchs_size]/F")
+         self.t.Branch( "jetchs_eta",self.jetchs_eta, "jetchs_eta[jetchs_size]/F")
+         self.t.Branch( "jetchs_phi",self.jetchs_phi, "jetchs_phi[jetchs_size]/F")
+         self.t.Branch( "jetchs_mass",self.jetchs_mass, "jetchs_mass[jetchs_size]/F")
+         self.t.Branch( "jetchs_idpass",self. jetchs_idpass, "jetchs_idpass[jetchs_size]/i")
+         self.t.Branch( "jetchs_DeepJET",self.jetchs_DeepJET,"jetchs_DeepJET[jetchs_size]/F")
+         self.t.Branch( "jetchs_btag",self.jetchs_btag,"jetchs_btag[jetchs_size]/I")
+
+         self.t.Branch( "metpuppi_size",self.metpuppi_size, "metpuppi_size/I")
+         self.t.Branch( "metpuppi_pt",self. metpuppi_pt, "metpuppi_pt[metpuppi_size]/F")
+         self.t.Branch( "metpuppi_phi",self.metpuppi_phi, "metpuppi_phi[metpuppi_size]/F")
+
+         self.t.Branch( "metpf_size",self.metpf_size, "metpf_size/I")
+         self.t.Branch( "metpf_pt",self. metpf_pt, "metpf_pt[metpf_size]/F")
+         self.t.Branch( "metpf_phi",self.metpf_phi, "metpf_phi[metpf_size]/F")
 
     #___________________________________________
     def processEvent(self, entry):
@@ -206,7 +238,6 @@ class TreeProducer:
             i += 1
         self.genpart_size[0] = i
 
-
     #___________________________________________
     def processGenJets(self, genjets):
         i = 0
@@ -218,6 +249,15 @@ class TreeProducer:
             i += 1
         self.genjet_size[0] = i
 
+    #___________________________________________
+    def processGenMissingET(self, met):
+        i = 0
+        for item in met:
+
+            self.genmet_pt    [i] = item.MET
+            self.genmet_phi   [i] = item.Phi
+            i += 1
+        self.genmet_size  [0] = i
 
     #___________________________________________
     def processPhotons(self, photons, photons_loose, photons_medium, photons_tight):
@@ -347,16 +387,16 @@ class TreeProducer:
         self.muon_size[0] = i
 
     #___________________________________________
-    def processJets(self, jets):
+    def processPuppiJets(self, jets):
 
         i = 0
         for item in jets:
             jetp4 = item.P4()
-            self.jet_pt      [i] = jetp4.Pt()
-            self.jet_eta     [i] = jetp4.Eta()
-            self.jet_phi     [i] = jetp4.Phi()
-            self.jet_mass    [i] = jetp4.M()
-            self.jet_idpass  [i] = 0             # DUMMY 
+            self.jetpuppi_pt      [i] = jetp4.Pt()
+            self.jetpuppi_eta     [i] = jetp4.Eta()
+            self.jetpuppi_phi     [i] = jetp4.Phi()
+            self.jetpuppi_mass    [i] = jetp4.M()
+            self.jetpuppi_idpass  [i] = 0             # DUMMY 
 
             ### JETID: Jet constituents seem to broken!! For now set all Jet ID to True TO BE FIXED ######
 
@@ -385,21 +425,66 @@ class TreeProducer:
             if self.debug : print '   jet const sum: ', p4tot.Pt(), p4tot.Eta(), p4tot.Phi(), p4tot.M()
             if self.debug : print '   jet          : ', jetp4.Pt(), jetp4.Eta(), jetp4.Phi(), jetp4.M()
 
-            self.jet_idpass[i] |= 1 << 0
-            self.jet_idpass[i] |= 1 << 1
-            self.jet_idpass[i] |= 1 << 2
+            self.jetpuppi_idpass[i] |= 1 << 0
+            self.jetpuppi_idpass[i] |= 1 << 1
+            self.jetpuppi_idpass[i] |= 1 << 2
 
             #### BTagging
 
-            self.jet_DeepJET [i] = 0.  ## some dummy value
+            self.jetpuppi_DeepJET [i] = 0.  ## some dummy value
 
             for j in range(3):
                 if ( item.BTag & (1 << j) ):
-                    self.jet_btag[i] |= 1 << j
+                    self.jetpuppi_btag[i] |= 1 << j
 
             i += 1
-        self.jet_size[0] = i
+        self.jetpuppi_size[0] = i
 
+    #___________________________________________
+    def processCHSJets(self, jets):
+
+        i = 0
+        for item in jets:
+            jetp4 = item.P4()
+            self.jetchs_pt      [i] = jetp4.Pt()
+            self.jetchs_eta     [i] = jetp4.Eta()
+            self.jetchs_phi     [i] = jetp4.Phi()
+            self.jetchs_mass    [i] = jetp4.M()
+            self.jetchs_idpass  [i] = 0             # DUMMY 
+
+            ### JETID: Jet constituents seem to broken!! For now set all Jet ID to True TO BE FIXED ######
+
+            # compute jet id by looping over jet constituents
+            if self.debug : print '   new jet: ', item.PT, item.Eta, item.Phi, item.Mass
+
+            p4tot = ROOT.TLorentzVector(0., 0., 0., 0.)
+
+            if self.debug: print '   -> Nconst: ', len(item.Constituents)
+            for j in xrange(len(item.Constituents)):
+                const = item.Constituents.At(j)
+                p4 = ROOT.TLorentzVector(0., 0., 0., 0.)
+                if isinstance(const, ROOT.Track):
+                    p4 = ROOT.Track(const).P4()
+                    if self.debug: print '       Track: ', p4.Pt(), p4.Eta(), p4.Phi(), p4.M()
+
+                if isinstance(const, ROOT.Tower):
+                    p4 = ROOT.Tower(const).P4()
+                    if self.debug: print '       Tower: ', p4.Pt(), p4.Eta(), p4.Phi(), p4.M()           
+
+                if isinstance(const, ROOT.Muon):
+                    p4 = ROOT.Muon(const).P4()
+                    if self.debug: print '       Muon: ', p4.Pt(), p4.Eta(), p4.Phi(), p4.M()            
+                p4tot += p4
+
+            if self.debug : print '   jet const sum: ', p4tot.Pt(), p4tot.Eta(), p4tot.Phi(), p4tot.M()
+            if self.debug : print '   jet          : ', jetp4.Pt(), jetp4.Eta(), jetp4.Phi(), jetp4.M()
+
+            self.jetchs_idpass[i] |= 1 << 0
+            self.jetchs_idpass[i] |= 1 << 1
+            self.jetchs_idpass[i] |= 1 << 2
+
+            i += 1
+        self.jetchs_size[0] = i
 
 
     #___________________________________________
@@ -417,26 +502,37 @@ class TreeProducer:
             self.tau_charge     [i]  = item.Charge
             self.tau_decaymode  [i]  = 0. # dummy for now, has to be implemented in Delphes
             self.tau_reliso     [i]  = 0. # dummy for now, has to be implemented in Delphes
-            self.tau_isofunction[i]  = 0. # dummy for now, has to be implemented in Delphes
 
-            ## Tau-Tagging (for now only cut based ID, corresponds to 1st BIT in Delphes) ### TO BE FIXED !!!
+            ## Tau-Tagging (including the 4WPs cut based)
             if ( item.TauTag & (1 << 0) ):
                 self.tau_isopass    [i] |= 1 << 0
+
+            for j in range(4):
+                if ( item.tau_isopass & (1 << j) ):
+                    self.tau_isopass[i] |= 1 << j
 
             i += 1
         self.tau_size[0] = i
 
-
-
     #___________________________________________
-    def processMissingET(self, met):
+    def processPFMissingET(self, met):
         i = 0
         for item in met:
 
-            self.met_pt    [i] = item.MET
-            self.met_phi   [i] = item.Phi
+            self.metpf_pt    [i] = item.MET
+            self.metpf_phi   [i] = item.Phi
             i += 1
-        self.met_size  [0] = i
+        self.metpf_size  [0] = i
+
+    #___________________________________________
+    def processPuppiMissingET(self, met):
+        i = 0
+        for item in met:
+
+            self.metpuppi_pt    [i] = item.MET
+            self.metpuppi_phi   [i] = item.Phi
+            i += 1
+        self.metpuppi_size  [0] = i
 
 
     def fill(self):
@@ -488,6 +584,7 @@ def main():
     branchVertex          = treeReader.UseBranch('Vertex')   
     branchParticle        = treeReader.UseBranch('Particle') 
     branchGenJet          = treeReader.UseBranch('GenJet')   
+    branchGenMissingET    = treeReader.UseBranch('GenMissingET')   
 
     branchPhoton          = treeReader.UseBranch('Photon')
     branchPhotonLoose     = treeReader.UseBranch('PhotonLoose')
@@ -502,16 +599,17 @@ def main():
     branchElectronTight   = branchElectronMedium
     # TO BE FIXED (replace by Tight when available)!!!
 
-
     branchMuon            = treeReader.UseBranch('Muon')
     branchMuonLoose       = treeReader.UseBranch('MuonLoose')
     # TO BE FIXED (replace by Medium when available)!!!
     branchMuonMedium      = branchMuonLoose
     branchMuonTight       = treeReader.UseBranch('MuonTight')
 
-    branchJet            = treeReader.UseBranch('JetPUPPI')
-    #branchJet            = treeReader.UseBranch('Jet')
-    branchMissingET       = treeReader.UseBranch('PuppiMissingET')
+    branchPuppiJet        = treeReader.UseBranch('JetPUPPI')
+    branchCHSJet          = treeReader.UseBranch('Jet')
+
+    branchPuppiMissingET  = treeReader.UseBranch('PuppiMissingET')
+    branchPFMissingET     = treeReader.UseBranch('MissingET')
 
     # NEED these branches to access jet constituents
     branchEFlowTrack = treeReader.UseBranch('EFlowTrack');
@@ -536,12 +634,15 @@ def main():
         treeProducer.processVertices(branchVertex)
         treeProducer.processGenParticles(branchParticle)
         treeProducer.processGenJets(branchGenJet)
+        treeProducer.processGenMissingET(branchGenMissingET)
         treeProducer.processElectrons(branchElectron, branchElectronLoose, branchElectronMedium, branchElectronTight)
         treeProducer.processMuons(branchMuon, branchMuonLoose, branchMuonMedium, branchMuonTight)
         treeProducer.processPhotons(branchPhoton, branchPhotonLoose, branchPhotonMedium, branchPhotonTight)
-        treeProducer.processJets(branchJet)
-        treeProducer.processTaus(branchJet)
-        treeProducer.processMissingET(branchMissingET)
+        treeProducer.processCHSJets(branchCHSJet)
+        treeProducer.processPuppiJets(branchPuppiJet)
+        treeProducer.processTaus(branchPuppiJet)
+        treeProducer.processPFMissingET(branchPFMissingET)
+        treeProducer.processPuppiMissingET(branchPuppiMissingET)
 
         ## fill tree 
         treeProducer.fill()
