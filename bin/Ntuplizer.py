@@ -406,18 +406,52 @@ class TreeProducer:
             p4tot = ROOT.TLorentzVector(0., 0., 0., 0.)
 
             nconst = 0
+
+            neutralEmEnergy = 0.
+            chargedEmEnergy = 0.
+
+            neutralHadEnergy = 0.
+            chargedHadEnergy = 0.
+
             for j in xrange(len(item.Constituents)):
                 const = item.Constituents.At(j)
                 p4 = ROOT.TLorentzVector(0., 0., 0., 0.)
                 if isinstance(const, ROOT.ParticleFlowCandidate):
                     p4 = ROOT.ParticleFlowCandidate(const).P4()
                     nconst +=1
-                    if self.debug: print '       PFCandidate: ',const.PID, p4.Pt(), p4.Eta(), p4.Phi(), p4.M()
-                p4tot += p4
+                    p4tot += p4
 
-            if self.debug: print '   -> Nconst: ', nconst
+                    if const.Charge == 0:
+                        if const.PID == 22: neutralEmEnergy += const.E
+                        if const.PID == 0 : neutralHadEnergy += const.E
+                    else:
+                        if abs(const.PID) == 11: chargedEmEnergy += const.E
+                        elif abs(const.PID) != 13: chargedHadEnergy += const.E
+                    
+                    if self.debug: print '       PFCandidate: ',const.PID, p4.Pt(), p4.Eta(), p4.Phi(), p4.M()
+
+            EmEnergy  = neutralEmEnergy + chargedEmEnergy
+            HadEnergy = neutralHadEnergy + chargedHadEnergy
+            
+            if EmEnergy > 0.:
+                neutralEmEF = neutralEmEnergy / EmEnergy
+            else:
+                neutralEmEF = 0.;
+            
+            if HadEnergy > 0.:
+                neutralHadEF = neutralHadEnergy / HadEnergy
+            else:
+                neutralHadEF = 0.;
+
+            if self.debug : print '   -> Nconst: ', nconst
             if self.debug : print '   jet const sum: ', p4tot.Pt(), p4tot.Eta(), p4tot.Phi(), p4tot.M()
             if self.debug : print '   jet          : ', jetp4.Pt(), jetp4.Eta(), jetp4.Phi(), jetp4.M()
+
+            # compute jet Id (0: LOOSE, 1: MEDIUM, 2: TIGHT)
+
+            if nconst > 1 and neutralEmEF < 0.99 and neutralHadEF < 0.99: self.jetpuppi_idpass[i] |= 1 << 0
+            if nconst > 1 and neutralEmEF < 0.99 and neutralHadEF < 0.99: self.jetpuppi_idpass[i] |= 1 << 1
+            if nconst > 1 and neutralEmEF < 0.90 and neutralHadEF < 0.90: self.jetpuppi_idpass[i] |= 1 << 2
 
             self.jetpuppi_idpass[i] |= 1 << 0
             self.jetpuppi_idpass[i] |= 1 << 1
@@ -454,6 +488,13 @@ class TreeProducer:
             p4tot = ROOT.TLorentzVector(0., 0., 0., 0.)
 
             nconst = 0
+
+            neutralEmEnergy = 0.
+            chargedEmEnergy = 0.
+
+            neutralHadEnergy = 0.
+            chargedHadEnergy = 0.
+
             for j in xrange(len(item.Constituents)):
                 const = item.Constituents.At(j)
                 p4 = ROOT.TLorentzVector(0., 0., 0., 0.)
@@ -461,24 +502,50 @@ class TreeProducer:
                     p4 = ROOT.ParticleFlowCandidate(const).P4()
                     nconst +=1
                     if self.debug: print '       PFCandidate: ',const.PID, p4.Pt(), p4.Eta(), p4.Phi(), p4.M()
-                p4tot += p4
+                    p4tot += p4
+
+                    if const.Charge == 0:
+                	if const.PID == 22: neutralEmEnergy += const.E
+                	if const.PID == 0 : neutralHadEnergy += const.E
+                    else:
+                	if abs(const.PID) == 11: chargedEmEnergy += const.E
+                	elif abs(const.PID) != 13: chargedHadEnergy += const.E
 
             corr = TLorentzVector()
             for r in rho:
                 if item.Eta > r.Edges[0] and item.Eta < r.Edges[1]:
                     corr = item.Area * r.Rho 
 
-            if self.debug: print '   -> Nconst: ', nconst
+	    neutralEmEnergy  -= corr.E()
+	    EmEnergy  = neutralEmEnergy + chargedEmEnergy
+	    
+	    #neutralHadEnergy  -= corr.E()
+	    HadEnergy = neutralHadEnergy + chargedHadEnergy
+
+            if EmEnergy > 0.:
+                neutralEmEF = neutralEmEnergy / EmEnergy
+            else:
+                neutralEmEF = 0.;
             
+            if HadEnergy > 0.:
+                neutralHadEF = neutralHadEnergy / HadEnergy
+            else:
+                neutralHadEF = 0.;
+
+             
+            if self.debug: print '   -> Nconst: ', nconst
+            if self.debug: print '   -> Nconst: ', nconst
+
             sumpTcorr = p4tot - corr
             if self.debug : print '   jet const sum uncorr. : ', p4tot.Pt(), p4tot.Eta(), p4tot.Phi(), p4tot.M()
             if self.debug : print '   jet const sum corr.   : ', sumpTcorr.Pt(), sumpTcorr.Eta(), sumpTcorr.Phi(), sumpTcorr.M()
             if self.debug : print '   jet                   : ', jetp4.Pt(), jetp4.Eta(), jetp4.Phi(), jetp4.M()
 
+            # compute jet Id (0: LOOSE, 1: MEDIUM, 2: TIGHT)
 
-            self.jetchs_idpass[i] |= 1 << 0
-            self.jetchs_idpass[i] |= 1 << 1
-            self.jetchs_idpass[i] |= 1 << 2
+            if nconst > 1 and neutralEmEF < 0.99 and neutralHadEF < 0.99: self.jetchs_idpass[i] |= 1 << 0
+            if nconst > 1 and neutralEmEF < 0.99 and neutralHadEF < 0.99: self.jetchs_idpass[i] |= 1 << 1
+            if nconst > 1 and neutralEmEF < 0.90 and neutralHadEF < 0.90: self.jetchs_idpass[i] |= 1 << 2
 
             i += 1
         self.jetchs_size[0] = i
