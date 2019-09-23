@@ -47,7 +47,6 @@ cmsenv
 cd ..
 git clone https://github.com/delphes/delphes.git
 cd delphes
-git checkout tags/3.4.2pre17
 ./configure
 sed -i -e 's/c++0x/c++1y/g' Makefile
 make -j 10
