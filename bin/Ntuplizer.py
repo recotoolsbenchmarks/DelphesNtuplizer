@@ -401,27 +401,21 @@ class TreeProducer:
             ### JETID: Jet constituents seem to broken!! For now set all Jet ID to True TO BE FIXED ######
 
             # compute jet id by looping over jet constituents
-            if self.debug : print '   new jet: ', item.PT, item.Eta, item.Phi, item.Mass
+            if self.debug : print '   new PUPPI jet: ', item.PT, item.Eta, item.Phi, item.Mass
 
             p4tot = ROOT.TLorentzVector(0., 0., 0., 0.)
 
-            if self.debug: print '   -> Nconst: ', len(item.Constituents)
+            nconst = 0
             for j in xrange(len(item.Constituents)):
                 const = item.Constituents.At(j)
                 p4 = ROOT.TLorentzVector(0., 0., 0., 0.)
-                if isinstance(const, ROOT.Track):
-                    p4 = ROOT.Track(const).P4()
-                    if self.debug: print '       Track: ', p4.Pt(), p4.Eta(), p4.Phi(), p4.M()
-
-                if isinstance(const, ROOT.Tower):
-                    p4 = ROOT.Tower(const).P4()
-                    if self.debug: print '       Tower: ', p4.Pt(), p4.Eta(), p4.Phi(), p4.M()           
-
-                if isinstance(const, ROOT.Muon):
-                    p4 = ROOT.Muon(const).P4()
-                    if self.debug: print '       Muon: ', p4.Pt(), p4.Eta(), p4.Phi(), p4.M()            
+                if isinstance(const, ROOT.ParticleFlowCandidate):
+                    p4 = ROOT.ParticleFlowCandidate(const).P4()
+                    nconst +=1
+                    if self.debug: print '       PFCandidate: ',const.PID, p4.Pt(), p4.Eta(), p4.Phi(), p4.M()
                 p4tot += p4
 
+            if self.debug: print '   -> Nconst: ', nconst
             if self.debug : print '   jet const sum: ', p4tot.Pt(), p4tot.Eta(), p4tot.Phi(), p4tot.M()
             if self.debug : print '   jet          : ', jetp4.Pt(), jetp4.Eta(), jetp4.Phi(), jetp4.M()
 
@@ -441,7 +435,7 @@ class TreeProducer:
         self.jetpuppi_size[0] = i
 
     #___________________________________________
-    def processCHSJets(self, jets):
+    def processCHSJets(self, jets, rho):
 
         i = 0
         for item in jets:
@@ -455,29 +449,32 @@ class TreeProducer:
             ### JETID: Jet constituents seem to broken!! For now set all Jet ID to True TO BE FIXED ######
 
             # compute jet id by looping over jet constituents
-            if self.debug : print '   new jet: ', item.PT, item.Eta, item.Phi, item.Mass
+            if self.debug : print '   new CHS jet: ', item.PT, item.Eta, item.Phi, item.Mass
 
             p4tot = ROOT.TLorentzVector(0., 0., 0., 0.)
 
-            if self.debug: print '   -> Nconst: ', len(item.Constituents)
+            nconst = 0
             for j in xrange(len(item.Constituents)):
                 const = item.Constituents.At(j)
                 p4 = ROOT.TLorentzVector(0., 0., 0., 0.)
-                if isinstance(const, ROOT.Track):
-                    p4 = ROOT.Track(const).P4()
-                    if self.debug: print '       Track: ', p4.Pt(), p4.Eta(), p4.Phi(), p4.M()
-
-                if isinstance(const, ROOT.Tower):
-                    p4 = ROOT.Tower(const).P4()
-                    if self.debug: print '       Tower: ', p4.Pt(), p4.Eta(), p4.Phi(), p4.M()           
-
-                if isinstance(const, ROOT.Muon):
-                    p4 = ROOT.Muon(const).P4()
-                    if self.debug: print '       Muon: ', p4.Pt(), p4.Eta(), p4.Phi(), p4.M()            
+                if isinstance(const, ROOT.ParticleFlowCandidate):
+                    p4 = ROOT.ParticleFlowCandidate(const).P4()
+                    nconst +=1
+                    if self.debug: print '       PFCandidate: ',const.PID, p4.Pt(), p4.Eta(), p4.Phi(), p4.M()
                 p4tot += p4
 
-            if self.debug : print '   jet const sum: ', p4tot.Pt(), p4tot.Eta(), p4tot.Phi(), p4tot.M()
-            if self.debug : print '   jet          : ', jetp4.Pt(), jetp4.Eta(), jetp4.Phi(), jetp4.M()
+            corr = TLorentzVector()
+            for r in rho:
+                if item.Eta > r.Edges[0] and item.Eta < r.Edges[1]:
+                    corr = item.Area * r.Rho 
+
+            if self.debug: print '   -> Nconst: ', nconst
+            
+            sumpTcorr = p4tot - corr
+            if self.debug : print '   jet const sum uncorr. : ', p4tot.Pt(), p4tot.Eta(), p4tot.Phi(), p4tot.M()
+            if self.debug : print '   jet const sum corr.   : ', sumpTcorr.Pt(), sumpTcorr.Eta(), sumpTcorr.Phi(), sumpTcorr.M()
+            if self.debug : print '   jet                   : ', jetp4.Pt(), jetp4.Eta(), jetp4.Phi(), jetp4.M()
+
 
             self.jetchs_idpass[i] |= 1 << 0
             self.jetchs_idpass[i] |= 1 << 1
@@ -503,12 +500,11 @@ class TreeProducer:
             self.tau_decaymode  [i]  = 0. # dummy for now, has to be implemented in Delphes
             self.tau_reliso     [i]  = 0. # dummy for now, has to be implemented in Delphes
 
-            ## Tau-Tagging (including the 4WPs cut based)
             if ( item.TauTag & (1 << 0) ):
                 self.tau_isopass    [i] |= 1 << 0
 
             for j in range(4):
-                if ( item.tau_isopass & (1 << j) ):
+                if ( item.TauTag & (1 << j) ):
                     self.tau_isopass[i] |= 1 << j
 
             i += 1
@@ -612,10 +608,11 @@ def main():
     branchPFMissingET     = treeReader.UseBranch('MissingET')
 
     # NEED these branches to access jet constituents
-    branchEFlowTrack = treeReader.UseBranch('EFlowTrack');
-    branchEFlowPhoton = treeReader.UseBranch('EFlowPhoton');
-    branchEFlowNeutralHadron = treeReader.UseBranch('EFlowNeutralHadron');
+    branchPuppiCandidate  = treeReader.UseBranch('ParticleFlowCandidate')
+    branchPFCandidateCHS  = treeReader.UseBranch('ParticleFlowCandidateCHS')
 
+    branchRho             = treeReader.UseBranch('Rho')
+    
     treeProducer = TreeProducer(debug)
 
     if nevents > 0:
@@ -638,7 +635,7 @@ def main():
         treeProducer.processElectrons(branchElectron, branchElectronLoose, branchElectronMedium, branchElectronTight)
         treeProducer.processMuons(branchMuon, branchMuonLoose, branchMuonMedium, branchMuonTight)
         treeProducer.processPhotons(branchPhoton, branchPhotonLoose, branchPhotonMedium, branchPhotonTight)
-        treeProducer.processCHSJets(branchCHSJet)
+        treeProducer.processCHSJets(branchCHSJet, branchRho)
         treeProducer.processPuppiJets(branchPuppiJet)
         treeProducer.processTaus(branchPuppiJet)
         treeProducer.processPFMissingET(branchPFMissingET)

@@ -4487,9 +4487,12 @@ module TreeWriter TreeWriter {
   add Branch GenJetFinderAK8/jetsAK8 GenJetAK8 Jet
   add Branch GenMissingET/momentum GenMissingET MissingET
 
-  add Branch HCal/eflowTracks EFlowTrack Track
-  add Branch ECal/eflowPhotons EFlowPhoton Tower
-  add Branch HCal/eflowNeutralHadrons EFlowNeutralHadron Tower
+#  add Branch HCal/eflowTracks EFlowTrack Track
+#  add Branch ECal/eflowPhotons EFlowPhoton Tower
+#  add Branch HCal/eflowNeutralHadrons EFlowNeutralHadron Tower
+
+  add Branch RunPUPPI/PuppiParticles ParticleFlowCandidate ParticleFlowCandidate
+  add Branch EFlowMergerCHS/eflow ParticleFlowCandidateCHS ParticleFlowCandidate
 
   add Branch PhotonIsolation/photons Photon Photon
   add Branch PhotonLooseID/photons PhotonLoose Photon
