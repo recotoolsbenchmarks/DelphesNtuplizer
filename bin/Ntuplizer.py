@@ -84,7 +84,9 @@ class TreeProducer:
          self.tau_mass         = array( 'f', self.maxn*[ 0. ] )
          self.tau_charge       = array( 'i', self.maxn*[ 0 ] )
          self.tau_decaymode    = array( 'f', self.maxn*[ 0. ] )
-         self.tau_reliso       = array( 'f', self.maxn*[ 0. ] )
+         self.tau_neutraliso   = array( 'f', self.maxn*[ 0. ] )
+         self.tau_chargediso   = array( 'f', self.maxn*[ 0. ] )
+         self.tau_combinediso  = array( 'f', self.maxn*[ 0. ] )
          self.tau_isopass      = array( 'i', self.maxn*[ 0 ] )
 
          self.jetpuppi_size         = array( 'i', [ 0 ] )
@@ -117,6 +119,8 @@ class TreeProducer:
          self.t.Branch( "evt_size",self.evt_size, "evt_size/I")
 
          self.t.Branch( "vtx_size",self.vtx_size, "vtx_size/I")
+         self.t.Branch( "trueInteractions",self.vtx_size, "trueInteractions/I")
+         self.t.Branch( "npuVertices",self.vtx_size, "npuVertices/I")
          self.t.Branch( "vtx_pt2",self.vtx_pt2, "vtx_pt2[vtx_size]/F")
 
          self.t.Branch( "genpart_size",self.genpart_size, "genpart_size/I")
@@ -180,7 +184,9 @@ class TreeProducer:
          self.t.Branch( "tau_mass",self.tau_mass, "tau_mass[tau_size]/F")
          self.t.Branch( "tau_charge",self.tau_charge, "tau_charge[tau_size]/I")
          self.t.Branch( "tau_decaymode",self.tau_decaymode, "tau_decaymode[tau_size]/F")
-         self.t.Branch( "tau_reliso",self.tau_reliso, "tau_reliso[tau_size]/F")
+         self.t.Branch( "tau_neutraliso",self.tau_neutraliso, "tau_neutraliso[tau_size]/F")
+         self.t.Branch( "tau_chargediso",self.tau_chargediso, "tau_chargediso[tau_size]/F")
+         self.t.Branch( "tau_combinediso",self.tau_combinediso, "tau_combinediso[tau_size]/F")
          self.t.Branch( "tau_isopass",self. tau_isopass, "tau_isopass[tau_size]/i")
 
          self.t.Branch( "jetpuppi_size",self.jetpuppi_size, "jetpuppi_size/I")
@@ -559,13 +565,15 @@ class TreeProducer:
         for item in jets:
 
             jetp4 = item.P4()
-            self.tau_pt         [i]  = jetp4.Pt()
-            self.tau_eta        [i]  = jetp4.Eta()
-            self.tau_phi        [i]  = jetp4.Phi()
-            self.tau_mass       [i]  = jetp4.M()
-            self.tau_charge     [i]  = item.Charge
-            self.tau_decaymode  [i]  = 0. # dummy for now, has to be implemented in Delphes
-            self.tau_reliso     [i]  = 0. # dummy for now, has to be implemented in Delphes
+            self.tau_pt          [i]  = jetp4.Pt()
+            self.tau_eta         [i]  = jetp4.Eta()
+            self.tau_phi         [i]  = jetp4.Phi()
+            self.tau_mass        [i]  = jetp4.M()
+            self.tau_charge      [i]  = item.Charge
+            self.tau_decaymode   [i]  = 0. # dummy for now, has to be implemented in Delphes
+            self.tau_chargediso  [i]  = 0. # dummy for now, has to be implemented in Delphes
+            self.tau_neutraliso  [i]  = 0. # dummy for now, has to be implemented in Delphes
+            self.tau_combinediso [i]  = 0. # dummy for now, has to be implemented in Delphes
 
             if ( item.TauTag & (1 << 0) ):
                 self.tau_isopass    [i] |= 1 << 0
@@ -691,7 +699,7 @@ def main():
         # Load selected branches with data from specified event
         treeReader.ReadEntry(entry)
 
-        if (entry+1)%1 == 0:
+        if (entry+1)%1000 == 0:
             print ' ... processed {} events ...'.format(entry+1)
 
         treeProducer.processEvent(entry)
