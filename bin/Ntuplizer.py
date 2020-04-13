@@ -22,6 +22,9 @@ class TreeProducer:
 
          self.vtx_size         = array( 'i', [ 0 ] )
          self.vtx_pt2          = array( 'f', self.maxn*[ 0. ] )
+         
+         ## put dummy value for now
+         self.true_int         = array( 'i', [ -1 ] )
 
          self.genpart_size     = array( 'i', [ 0 ] )
          self.genpart_pid      = array( 'i', self.maxn*[ 0 ] )
@@ -119,7 +122,7 @@ class TreeProducer:
          self.t.Branch( "evt_size",self.evt_size, "evt_size/I")
 
          self.t.Branch( "vtx_size",self.vtx_size, "vtx_size/I")
-         self.t.Branch( "trueInteractions",self.vtx_size, "trueInteractions/I")
+         self.t.Branch( "trueInteractions",self.true_int, "trueInteractions/I")
          self.t.Branch( "npuVertices",self.vtx_size, "npuVertices/I")
          self.t.Branch( "vtx_pt2",self.vtx_pt2, "vtx_pt2[vtx_size]/F")
 
