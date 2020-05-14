@@ -14,6 +14,7 @@
 #######################################
 # Order of execution of various modules
 #######################################
+  
 
 set ExecutionPath {
 
@@ -70,13 +71,11 @@ set ExecutionPath {
 
   PhotonLooseID
   PhotonTightID
-  
+
   ElectronCloner
   ElectronIsolation
   ElectronIsolationCHS
 
-#  ElectronEfficiency
-#  ElectronEfficiencyCHS
   ElectronLooseEfficiency
   ElectronTightEfficiency
   ElectronLooseEfficiencyCHS
@@ -161,8 +160,8 @@ module PileUpMerger PileUpMerger {
   set VertexOutputArray vertices
 
   # pre-generated minbias input file
-  #set PileUpFile /eos/cms/store/group/upgrade/delphes/PhaseII/MinBias_100k.pileup
-  set PileUpFile MinBias_100k.pileup
+  set PileUpFile /eos/cms/store/group/upgrade/delphes/PhaseII/MinBias_100k.pileup
+  #set PileUpFile MinBias_100k.pileup
   
   # average expected pile up
   set MeanPileUp 200
@@ -2191,18 +2190,17 @@ module Isolation MuonIsolationCHS {
 }
 
 
-#####################
-# Muon Loose Id     #
-#####################
+
+##################
+# Muon Loose Id  #
+##################
 
 module Efficiency MuonLooseIdEfficiency {
     set InputArray MuonIsolation/muons
     set OutputArray muons
-    # LooseID(fullsim) * LooseIso(fullsim)/LooseIso(Delphes) efficiency formula for muons
+    # TightID(fullsim) * TightIso(fullsim)/TightIso(Delphes) efficiency formula for muons
     source muonLooseId_200PU_VAL.tcl
-
 }
-
 
 ##################
 # Muon Tight Id  #
@@ -4356,7 +4354,7 @@ module TreeWriter TreeWriter {
   add Branch PhotonTightID/photons PhotonTight Photon
 
   add Branch ElectronIsolation/electrons Electron Electron
-#  add Branch ElectronEfficiency/electrons ElectronMedium Electron
+  #add Branch ElectronEfficiency/electrons ElectronMedium Electron
   add Branch ElectronLooseEfficiency/electrons ElectronLoose Electron
   add Branch ElectronTightEfficiency/electrons ElectronTight Electron
 
@@ -4364,10 +4362,11 @@ module TreeWriter TreeWriter {
   add Branch MuonLooseIdEfficiency/muons MuonLoose Muon
   add Branch MuonTightIdEfficiency/muons MuonTight Muon
 
-#  add Branch PhotonEfficiencyCHS/photons PhotonCHS Photon
-#  add Branch ElectronEfficiencyCHS/electrons ElectronCHS Electron
+  add Branch PhotonEfficiencyCHS/photons PhotonCHS Photon
+  #add Branch ElectronEfficiencyCHS/electrons ElectronCHS Electron
   add Branch ElectronLooseEfficiencyCHS/electrons ElectronLooseCHS Electron
   add Branch ElectronTightEfficiencyCHS/electrons ElectronTightCHS Electron
+ 
   add Branch MuonLooseIdEfficiencyCHS/muons MuonLooseCHS Muon
   add Branch MuonTightIdEfficiencyCHS/muons MuonTightCHS Muon
 

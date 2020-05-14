@@ -1,6 +1,7 @@
 ## Fullsim Efficiency for muon_efficiency2D_tightID, multiplying ISO Fullsim/Delphes? True
 
-set EfficiencyFormula{
+set EfficiencyFormula {
+        (pt <= 10.0) * (1.0) +
 	(abs(eta) > 0.0 && abs(eta) <= 1.0) * (pt > 10.0 && pt <= 12.0) * (0.343085661336) +
 	(abs(eta) > 0.0 && abs(eta) <= 1.0) * (pt > 12.0 && pt <= 14.0) * (0.381842733189) +
 	(abs(eta) > 0.0 && abs(eta) <= 1.0) * (pt > 14.0 && pt <= 16.0) * (0.473688937427) +
@@ -120,5 +121,6 @@ set EfficiencyFormula{
 	(abs(eta) > 4.0 && abs(eta) <= 5.0) * (pt > 120.0 && pt <= 140.0) * (0.0) +
 	(abs(eta) > 4.0 && abs(eta) <= 5.0) * (pt > 140.0 && pt <= 160.0) * (0.0) +
 	(abs(eta) > 4.0 && abs(eta) <= 5.0) * (pt > 160.0 && pt <= 180.0) * (0.0) +
-	(abs(eta) > 4.0 && abs(eta) <= 5.0) * (pt > 180.0 && pt <= 200.0) * (0.0)
+	(abs(eta) > 4.0 && abs(eta) <= 5.0) * (pt > 180.0 && pt <= 200.0) * (0.0) +
+        (pt > 200.0) * (1.0) 
 }

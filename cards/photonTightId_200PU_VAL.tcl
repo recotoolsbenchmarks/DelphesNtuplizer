@@ -1,6 +1,7 @@
 ## Fullsim Efficiency for photon_efficiency2D_tightID, multiplying ISO Fullsim/Delphes? False
 
-set PromptFormula{
+set PromptFormula {
+        (pt <= 8.0) * (1.0) + 
 	(abs(eta) > 0.0 && abs(eta) <= 1.0) * (pt > 8.0 && pt <= 10.0) * (0.0) +
 	(abs(eta) > 0.0 && abs(eta) <= 1.0) * (pt > 10.0 && pt <= 12.0) * (0.0) +
 	(abs(eta) > 0.0 && abs(eta) <= 1.0) * (pt > 12.0 && pt <= 15.0) * (0.0) +
@@ -80,5 +81,6 @@ set PromptFormula{
 	(abs(eta) > 2.5 && abs(eta) <= 3.0) * (pt > 120.0 && pt <= 140.0) * (0.004329004329) +
 	(abs(eta) > 2.5 && abs(eta) <= 3.0) * (pt > 140.0 && pt <= 160.0) * (0.00480192076831) +
 	(abs(eta) > 2.5 && abs(eta) <= 3.0) * (pt > 160.0 && pt <= 180.0) * (0.00121876904327) +
-	(abs(eta) > 2.5 && abs(eta) <= 3.0) * (pt > 180.0 && pt <= 200.0) * (0.00494437577256)
+	(abs(eta) > 2.5 && abs(eta) <= 3.0) * (pt > 180.0 && pt <= 200.0) * (0.00494437577256) + 
+        (pt > 200.0) * (1.0)
 }
