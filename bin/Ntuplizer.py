@@ -295,15 +295,15 @@ class TreeProducer:
 
             # loop over ID collections
             for loose in photons_loose:
-                if dr_match(item,loose,0.2):
+                if dr_match(item,loose,0.005):
                     self.gamma_idpass[i] |= 1 << 0
 
             for medium in photons_medium:
-                if dr_match(item,medium,0.2):
+                if dr_match(item,medium,0.005):
                     self.gamma_idpass[i] |= 1 << 1
 
             for tight in photons_tight:
-                if dr_match(item,tight,0.2):
+                if dr_match(item,tight,0.005):
                     self.gamma_idpass[i] |= 1 << 2
             i += 1
 
@@ -338,15 +338,15 @@ class TreeProducer:
 
             # loop over ID collections
             for loose in electrons_loose:
-                if dr_match(item,loose,0.2):
+                if dr_match(item,loose,0.005):
                     self.elec_idpass[i] |= 1 << 0
 
             for medium in electrons_medium:
-                if dr_match(item,medium,0.2):
+                if dr_match(item,medium,0.005):
                     self.elec_idpass[i] |= 1 << 1
 
             for tight in electrons_tight:
-                if dr_match(item,tight,0.2):
+                if dr_match(item,tight,0.005):
                     self.elec_idpass[i] |= 1 << 2
 
             i += 1
@@ -381,15 +381,15 @@ class TreeProducer:
 
             # loop over ID collections
             for loose in muons_loose:
-                if dr_match(item,loose,0.2):
+                if dr_match(item,loose,0.005):
                     self.muon_idpass[i] |= 1 << 0
 
             for medium in muons_medium:
-                if dr_match(item,medium,0.2):
+                if dr_match(item,medium,0.005):
                     self.muon_idpass[i] |= 1 << 1
 
             for tight in muons_tight:
-                if dr_match(item,tight,0.2):
+                if dr_match(item,tight,0.005):
                     self.muon_idpass[i] |= 1 << 2
 
             i += 1
