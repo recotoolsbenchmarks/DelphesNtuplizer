@@ -581,12 +581,14 @@ class TreeProducer:
             self.tau_neutraliso  [i]  = 0. # dummy for now, has to be implemented in Delphes
             self.tau_combinediso [i]  = 0. # dummy for now, has to be implemented in Delphes
 
-            if ( item.TauTag & (1 << 0) ):
-                self.tau_isopass    [i] |= 1 << 0
+            #if ( item.TauTag & (1 << 0) ):
+            #    self.tau_isopass    [i] |= 1 << 0
 
-            for j in range(4):
-                if ( item.TauTag & (1 << j) ):
-                    self.tau_isopass[i] |= 1 << j
+            self.tau_isopass[i] = item.TauTag
+
+            #for j in range(4):
+            #    if ( item.TauTag & (1 << j) ):
+            #        self.tau_isopass[i] |= 1 << j
 
             i += 1
         self.tau_size[0] = i
