@@ -399,6 +399,7 @@ class TreeProducer:
     def processPuppiJets(self, jets):
 
         i = 0
+
         for item in jets:
             jetp4 = item.P4()
             self.jetpuppi_pt      [i] = jetp4.Pt()
@@ -469,11 +470,13 @@ class TreeProducer:
             #### BTagging
 
             self.jetpuppi_DeepJET [i] = 0.  ## some dummy value
-
-            for j in range(3):
+            self.jetpuppi_btag[i] = item.BTag
+            
+            '''for j in range(3):
                 if ( item.BTag & (1 << j) ):
                     self.jetpuppi_btag[i] |= 1 << j
-
+                    print 'jet', i, self.jetpuppi_btag[i] 
+            '''
             i += 1
         self.jetpuppi_size[0] = i
 
