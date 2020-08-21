@@ -399,6 +399,7 @@ class TreeProducer:
     def processPuppiJets(self, jets):
 
         i = 0
+
         for item in jets:
             jetp4 = item.P4()
             self.jetpuppi_pt      [i] = jetp4.Pt()
@@ -469,11 +470,13 @@ class TreeProducer:
             #### BTagging
 
             self.jetpuppi_DeepJET [i] = 0.  ## some dummy value
-
-            for j in range(3):
+            self.jetpuppi_btag[i] = item.BTag
+            
+            '''for j in range(3):
                 if ( item.BTag & (1 << j) ):
                     self.jetpuppi_btag[i] |= 1 << j
-
+                    print 'jet', i, self.jetpuppi_btag[i] 
+            '''
             i += 1
         self.jetpuppi_size[0] = i
 
@@ -578,12 +581,14 @@ class TreeProducer:
             self.tau_neutraliso  [i]  = 0. # dummy for now, has to be implemented in Delphes
             self.tau_combinediso [i]  = 0. # dummy for now, has to be implemented in Delphes
 
-            if ( item.TauTag & (1 << 0) ):
-                self.tau_isopass    [i] |= 1 << 0
+            #if ( item.TauTag & (1 << 0) ):
+            #    self.tau_isopass    [i] |= 1 << 0
 
-            for j in range(4):
-                if ( item.TauTag & (1 << j) ):
-                    self.tau_isopass[i] |= 1 << j
+            self.tau_isopass[i] = item.TauTag
+
+            #for j in range(4):
+            #    if ( item.TauTag & (1 << j) ):
+            #        self.tau_isopass[i] |= 1 << j
 
             i += 1
         self.tau_size[0] = i
