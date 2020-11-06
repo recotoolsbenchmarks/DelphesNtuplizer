@@ -2,13 +2,15 @@
 #
 #  Main authors: Michele Selvaggi (CERN)
 #
-#  Released on: May 2018
+#  Released on: Nov. 2020
 #
-#  Version: v04
+#  Version: v06
 #
 #  Notes: - added DNN tau tagging ( 01/04/2019)
 #         - removed BTaggingMTD, and replaced BTagging with latest DeepJet parameterisation (20/07/2019)
-#
+#         - adding electrons, muons and photon fakes
+#         - removed ele/mu/gamma CHS collections
+#         - adding medium WPs for ele/mu/photons
 #
 #
 #######################################
@@ -69,36 +71,23 @@ set ExecutionPath {
   GenJetFinder
   FastJetFinder
 
-  JetFakeMaker
-  PhotonFakeMerger
-  ElectronFakeMerger
-  MuonFakeMerger
-
-  PhotonCloner
   PhotonIsolation
-  PhotonIsolationCHS
-  PhotonEfficiencyCHS
 
   PhotonLooseID
+  PhotonMediumID
   PhotonTightID
 
-  ElectronCloner
   ElectronIsolation
-  ElectronIsolationCHS
 
   ElectronLooseEfficiency
+  ElectronMediumEfficiency
   ElectronTightEfficiency
-  ElectronLooseEfficiencyCHS
-  ElectronTightEfficiencyCHS
 
-  MuonCloner
   MuonIsolation
-  MuonIsolationCHS
 
   MuonLooseIdEfficiency
+  MuonMediumIdEfficiency
   MuonTightIdEfficiency
-  MuonLooseIdEfficiencyCHS
-  MuonTightIdEfficiencyCHS
 
   MissingET
   PuppiMissingET
@@ -151,6 +140,22 @@ set ExecutionPath {
   TauTaggingPUPPIAK8DNNMedium
   TauTaggingPUPPIAK8DNNTight
 
+  JetFakeMakerLoose
+  JetFakeMakerMedium
+  JetFakeMakerTight
+
+  PhotonFakeMergerLoose
+  PhotonFakeMergerMedium
+  PhotonFakeMergerTight
+
+  ElectronFakeMergerLoose
+  ElectronFakeMergerMedium
+  ElectronFakeMergerTight
+
+  MuonFakeMergerLoose
+  MuonFakeMergerMedium
+  MuonFakeMergerTight
+
   TreeWriter
 }
 
@@ -166,8 +171,8 @@ module PileUpMerger PileUpMerger {
   set VertexOutputArray vertices
 
   # pre-generated minbias input file
-  #set PileUpFile /eos/cms/store/group/upgrade/delphes/PhaseII/MinBias_100k.pileup
-  set PileUpFile MinBias_100k.pileup
+  set PileUpFile /eos/cms/store/group/upgrade/delphes/PhaseII/MinBias_100k.pileup
+  #set PileUpFile MinBias_100k.pileup
   
   # average expected pile up
   set MeanPileUp 200
@@ -1090,7 +1095,7 @@ module FastJetFinder FastJetFinderAK8 {
 ###########################
 
 module JetPileUpSubtractor JetPileUpSubtractor {
-  set JetInputArray JetFakeMaker/jets
+  set JetInputArray FastJetFinder/jets
   set RhoInputArray Rho/rho
 
   set OutputArray jets
@@ -1203,92 +1208,6 @@ module PdgCodeFilter PhotonFilter {
   add PdgCode {22}
 }
 
-###########################
-# Jet Fake Particle Maker #
-###########################
-
-module JetFakeParticle JetFakeMaker {
-
-  set InputArray FastJetFinder/jets
-  set PhotonOutputArray photons
-  set MuonOutputArray muons
-  set ElectronOutputArray electrons
-  set JetOutputArray jets
-
-  # can have pdgID based formulas...
-  #  formula = new DelphesFormula;
-  #  formula->Compile(param[i * 2 + 1].GetString());
-  #  pdgCode = param[i * 2].GetInt();
-  #  fEfficiencyMap[param[i * 2].GetInt()] = formula;
-
-  set EfficiencyFormula {
-      11 0.01
-      13 0.01
-      22 0.05 }
-
-}
-
-##############
-# Photon fake merger
-##############
-
-module Merger PhotonFakeMerger {
-# add InputArray InputArray
-  add InputArray PhotonFilter/photons
-  add InputArray JetFakeMaker/photons
-  set OutputArray photons
-}
-
-##############
-# Electron fake merger
-##############
-
-module Merger ElectronFakeMerger {
-# add InputArray InputArray
-  add InputArray ElectronFilter/electrons
-  add InputArray JetFakeMaker/electrons
-  set OutputArray electrons
-}
-
-##############
-# Muon fake merger
-##############
-
-module Merger MuonFakeMerger {
-# add InputArray InputArray
-  add InputArray MuonMomentumSmearing/muons
-  add InputArray JetFakeMaker/muons
-  set OutputArray muons
-}
-
-
-##################
-# Muon cloner    #
-##################
-
-module Cloner MuonCloner {
-  set InputArray MuonFakeMerger/muons
-  set OutputArray muons
-}
-
-####################
-# Electron cloner  #
-####################
-
-module Cloner ElectronCloner {
-  set InputArray ElectronFakeMerger/electrons
-  set OutputArray electrons
-}
-
-##################
-# Photon cloner  #
-##################
-
-module Cloner PhotonCloner {
-  set InputArray PhotonFakeMerger/photons
-  set OutputArray photons
-}
-
 
 ####################
 # Photon isolation #
@@ -1297,7 +1216,7 @@ module Cloner PhotonCloner {
 module Isolation PhotonIsolation {
 
   # particle for which calculate the isolation
-  set CandidateInputArray PhotonFakeMerger/photons
+  set CandidateInputArray PhotonFilter/photons
 
   # isolation collection
   set IsolationInputArray EFlowFilterPuppi/eflow
@@ -1321,54 +1240,6 @@ module Isolation PhotonIsolation {
 }
 
 
-########################
-# Photon isolation CHS #
-########################
-
-module Isolation PhotonIsolationCHS {
-
-  # particle for which calculate the isolation
-  set CandidateInputArray PhotonCloner/photons
-
-  # isolation collection
-  set IsolationInputArray EFlowFilterCHS/eflow
-  set RhoInputArray Rho/rho
-
-  # output array
-  set OutputArray photons
-
-  # isolation cone
-  set DeltaRMax 0.3
-
-  # minimum pT
-  set PTMin     0.0
-
-  # iso ratio to cut
-  set PTRatioMax 9999.
-
-}
-
-
-
-#####################
-# Photon efficiency #
-#####################
-
-module Efficiency PhotonEfficiencyCHS {
-
-  ## input particles
-  set InputArray PhotonIsolationCHS/photons
-  ## output particles
-  set OutputArray photons
-  # set EfficiencyFormula {efficiency formula as a function of eta and pt}
-  # efficiency formula for photons
-  set EfficiencyFormula {                      (pt <= 10.0) * (0.00) + \
-                           (abs(eta) <= 1.5) * (pt > 10.0)  * (0.9635) + \
-         (abs(eta) > 1.5 && abs(eta) <= 4.0) * (pt > 10.0)  * (0.9624) + \
-         (abs(eta) > 4.0)                                   * (0.00)}
-
-}
-
 
 #####################
 # Photon Id Loose   #
@@ -1388,6 +1259,27 @@ module Efficiency PhotonLooseID {
          (abs(eta) > 4.0)                                   * (0.00)}
 
 }
+
+
+#####################
+# Photon Id Medium   #
+#####################
+
+module Efficiency PhotonMediumID {
+
+  ## input particles
+  set InputArray PhotonIsolation/photons
+  ## output particles
+  set OutputArray photons
+  # set EfficiencyFormula {efficiency formula as a function of eta and pt}
+  # efficiency formula for photons
+  set EfficiencyFormula {                      (pt <= 10.0) * (0.00) + \
+                           (abs(eta) <= 1.5) * (pt > 10.0)  * (1.0) + \
+         (abs(eta) > 1.5 && abs(eta) <= 4.0) * (pt > 10.0)  * (1.0) + \
+         (abs(eta) > 4.0)                                   * (0.00)}
+
+}
+
 
 #####################
 # Photon Id Tight   #
@@ -1415,7 +1307,7 @@ module Efficiency PhotonTightID {
 
 module Isolation ElectronIsolation {
 
-  set CandidateInputArray ElectronFakeMerger/electrons
+  set CandidateInputArray ElectronFilter/electrons
 
   # isolation collection
   set IsolationInputArray EFlowFilterPuppi/eflow
@@ -1429,36 +1321,25 @@ module Isolation ElectronIsolation {
 }
 
 
-##########################
-# Electron isolation CHS #
-##########################
-
-module Isolation ElectronIsolationCHS {
-
-  set CandidateInputArray ElectronCloner/electrons
-
-  # isolation collection
-  set IsolationInputArray EFlowFilterCHS/eflow
-  set RhoInputArray Rho/rho
-
-  set OutputArray electrons
-
-  # veto isolation cand. based on proximity to input cand.
-  set DeltaRMin 0.01
-  set UseMiniCone true
-
-  set DeltaRMax 0.3
-  set PTMin 0.0
-  set PTRatioMax 9999.
-
-}
-
 
 #######################
 # Electron loose ID efficiency #
 #######################
 
 module Efficiency ElectronLooseEfficiency {
+
+  set InputArray ElectronIsolation/electrons
+  set OutputArray electrons
+
+  source electronLooseId_200PU_VAL.tcl
+}
+
+#######################
+# Electron medium ID efficiency #
+#######################
+
+##FIXME!!! sourcing LooseId tcl file because medium does not exists (yet ...)
+module Efficiency ElectronMediumEfficiency {
 
   set InputArray ElectronIsolation/electrons
   set OutputArray electrons
@@ -1478,36 +1359,6 @@ module Efficiency ElectronTightEfficiency {
   source electronTightId_200PU_VAL.tcl
 }
 
-###########################
-# Electron efficiency CHS, loose #
-###########################
-
-module Efficiency ElectronLooseEfficiencyCHS {
-
-  set InputArray ElectronIsolationCHS/electrons
-  set OutputArray electrons
-  
-  ## This CHS version had a different efficiency, copy again from 
-  ## v04VAL if needed. It's probably wrong to use these tcl here
-  source electronLooseId_200PU_VAL.tcl
-
-}
-
-###########################
-# Electron efficiency CHS, tight #
-###########################
-
-module Efficiency ElectronTightEfficiencyCHS {
-
-  set InputArray ElectronIsolationCHS/electrons
-  set OutputArray electrons
-  
-  ## This CHS version had a different efficiency, copy again from 
-  ## v04VAL if needed. It's probably wrong to use these tcl here
-  source electronTightId_200PU_VAL.tcl
-
-}
-
 
 
 ##################
@@ -1515,7 +1366,7 @@ module Efficiency ElectronTightEfficiencyCHS {
 ##################
 
 module Isolation MuonIsolation {
-  set CandidateInputArray MuonFakeMerger/muons
+  set CandidateInputArray MuonMomentumSmearing/muons
 
   # isolation collection
   set IsolationInputArray EFlowFilterPuppi/eflow
@@ -1528,37 +1379,24 @@ module Isolation MuonIsolation {
 
 }
 
-######################
-# Muon isolation CHS #
-######################
-
-module Isolation MuonIsolationCHS {
-  set CandidateInputArray MuonCloner/muons
-
-  # isolation collection
-  set IsolationInputArray EFlowFilterCHS/eflow
-  set RhoInputArray Rho/rho
-
-  set OutputArray muons
-
-
-  # veto isolation cand. based on proximity to input cand.
-  set DeltaRMin 0.01
-  set UseMiniCone true
-
-  set DeltaRMax 0.3
-  set PTMin 0.0
-  set PTRatioMax 9999.
-
-}
-
-
 
 ##################
 # Muon Loose Id  #
 ##################
 
 module Efficiency MuonLooseIdEfficiency {
+    set InputArray MuonIsolation/muons
+    set OutputArray muons
+    # TightID(fullsim) * TightIso(fullsim)/TightIso(Delphes) efficiency formula for muons
+    source muonLooseId_200PU_VAL.tcl
+}
+
+##################
+# Muon Medium Id  #
+##################
+
+##FIXME!!! sourcing LooseId tcl file because medium does not exists (yet ...)
+module Efficiency MuonMediumIdEfficiency {
     set InputArray MuonIsolation/muons
     set OutputArray muons
     # TightID(fullsim) * TightIso(fullsim)/TightIso(Delphes) efficiency formula for muons
@@ -1574,35 +1412,6 @@ module Efficiency MuonTightIdEfficiency {
     set OutputArray muons
     # TightID(fullsim) * TightIso(fullsim)/TightIso(Delphes) efficiency formula for muons
     source muonTightId_200PU_VAL.tcl
-}
-
-
-#####################
-# Muon Loose Id CHS #
-#####################
-
-module Efficiency MuonLooseIdEfficiencyCHS {
-    set InputArray MuonIsolationCHS/muons
-    set OutputArray muons
-    # LooseID(fullsim) * LooseIso(fullsim)/LooseIso(Delphes) efficiency formula for muons
-    # which isolation did we use to fill isopass?
-    source muonLooseId_200PU_VAL.tcl
-
-}
-
-
-######################
-# Muon Tight Id  CHS #
-######################
-
-module Efficiency MuonTightIdEfficiencyCHS {
-    set InputArray MuonIsolationCHS/muons
-    set OutputArray muons
-    # TightID(fullsim) * TightIso(fullsim)/TightIso(Delphes) efficiency formula for muons
-    # which isolation did we use to fill isopass?
-    source muonTightId_200PU_VAL.tcl
-
-
 }
 
 
@@ -3677,6 +3486,170 @@ module TauTagging TauTaggingPUPPIAK8DNNTight {
 }
 
 
+
+
+#################################
+# Jet Fake Particle Maker Loose #
+#################################
+
+module JetFakeParticle JetFakeMakerLoose {
+
+  set InputArray JetEnergyScalePUPPI/jets
+  set PhotonOutputArray photons
+  set MuonOutputArray muons
+  set ElectronOutputArray electrons
+  set JetOutputArray jets
+
+  set EfficiencyFormula {
+      11 0.02
+      13 0.02
+      22 0.10 }
+
+}
+
+
+#################################
+# Jet Fake Particle Maker Medium #
+#################################
+
+module JetFakeParticle JetFakeMakerMedium {
+
+  set InputArray JetEnergyScalePUPPI/jets
+  set PhotonOutputArray photons
+  set MuonOutputArray muons
+  set ElectronOutputArray electrons
+  set JetOutputArray jets
+
+  set EfficiencyFormula {
+      11 0.01
+      13 0.01
+      22 0.05 }
+
+}
+
+#################################
+# Jet Fake Particle Maker Tight #
+#################################
+
+module JetFakeParticle JetFakeMakerTight {
+
+  set InputArray JetEnergyScalePUPPI/jets
+  set PhotonOutputArray photons
+  set MuonOutputArray muons
+  set ElectronOutputArray electrons
+  set JetOutputArray jets
+
+  set EfficiencyFormula {
+      11 0.005
+      13 0.005
+      22 0.025 }
+
+}
+
+
+############################
+# Photon fake merger loose
+############################
+
+module Merger PhotonFakeMergerLoose {
+# add InputArray InputArray
+  add InputArray PhotonLooseID/photons
+  add InputArray JetFakeMakerLoose/photons
+  set OutputArray photons
+}
+
+############################
+# Photon fake merger medium
+############################
+
+module Merger PhotonFakeMergerMedium {
+# add InputArray InputArray
+  add InputArray PhotonMediumID/photons
+  add InputArray JetFakeMakerMedium/photons
+  set OutputArray photons
+}
+
+############################
+# Photon fake merger tight
+############################
+
+module Merger PhotonFakeMergerTight {
+# add InputArray InputArray
+  add InputArray PhotonTightID/photons
+  add InputArray JetFakeMakerTight/photons
+  set OutputArray photons
+}
+
+############################
+# Electron fake merger loose
+############################
+
+module Merger ElectronFakeMergerLoose {
+# add InputArray InputArray
+  add InputArray ElectronLooseEfficiency/electrons
+  add InputArray JetFakeMakerLoose/electrons
+  set OutputArray electrons
+}
+
+############################
+# Electron fake merger medium
+############################
+
+module Merger ElectronFakeMergerMedium {
+# add InputArray InputArray
+  add InputArray ElectronMediumEfficiency/electrons
+  add InputArray JetFakeMakerMedium/electrons
+  set OutputArray electrons
+}
+
+############################
+# Electron fake merger tight
+############################
+
+module Merger ElectronFakeMergerTight {
+# add InputArray InputArray
+  add InputArray ElectronTightEfficiency/electrons
+  add InputArray JetFakeMakerTight/electrons
+  set OutputArray electrons
+}
+
+
+############################
+# Muon fake merger loose
+############################
+
+module Merger MuonFakeMergerLoose {
+# add InputArray InputArray
+  add InputArray MuonLooseIdEfficiency/muons
+  add InputArray JetFakeMakerLoose/muons
+  set OutputArray muons
+}
+
+############################
+# Muon fake merger medium
+############################
+
+module Merger MuonFakeMergerMedium {
+# add InputArray InputArray
+  add InputArray MuonMediumIdEfficiency/muons
+  add InputArray JetFakeMakerMedium/muons
+  set OutputArray muons
+}
+
+############################
+# Muon fake merger tight
+############################
+
+module Merger MuonFakeMergerTight {
+# add InputArray InputArray
+  add InputArray MuonMediumIdEfficiency/muons
+  add InputArray JetFakeMakerTight/muons
+  set OutputArray muons
+}
+
+
+
+
 ###############################################################################################################
 # StatusPidFilter: this module removes all generated particles except electrons, muons, taus, and status == 3 #
 ###############################################################################################################
@@ -3713,25 +3686,19 @@ module TreeWriter TreeWriter {
   add Branch EFlowMergerCHS/eflow ParticleFlowCandidateCHS ParticleFlowCandidate
 
   add Branch PhotonIsolation/photons Photon Photon
-  add Branch PhotonLooseID/photons PhotonLoose Photon
-  add Branch PhotonTightID/photons PhotonTight Photon
+  add Branch PhotonFakeMergerLoose/photons PhotonLoose Photon
+  add Branch PhotonFakeMergerMedium/photons PhotonMedium Photon
+  add Branch PhotonFakeMergerTight/photons PhotonTight Photon
 
   add Branch ElectronIsolation/electrons Electron Electron
-  #add Branch ElectronEfficiency/electrons ElectronMedium Electron
-  add Branch ElectronLooseEfficiency/electrons ElectronLoose Electron
-  add Branch ElectronTightEfficiency/electrons ElectronTight Electron
+  add Branch ElectronFakeMergerLoose/electrons ElectronLoose Electron
+  add Branch ElectronFakeMergerMedium/electrons ElectronMedium Electron
+  add Branch ElectronFakeMergerTight/electrons ElectronTight Electron
 
   add Branch MuonIsolation/muons Muon Muon
-  add Branch MuonLooseIdEfficiency/muons MuonLoose Muon
-  add Branch MuonTightIdEfficiency/muons MuonTight Muon
-
-  add Branch PhotonEfficiencyCHS/photons PhotonCHS Photon
-  #add Branch ElectronEfficiencyCHS/electrons ElectronCHS Electron
-  add Branch ElectronLooseEfficiencyCHS/electrons ElectronLooseCHS Electron
-  add Branch ElectronTightEfficiencyCHS/electrons ElectronTightCHS Electron
- 
-  add Branch MuonLooseIdEfficiencyCHS/muons MuonLooseCHS Muon
-  add Branch MuonTightIdEfficiencyCHS/muons MuonTightCHS Muon
+  add Branch MuonFakeMergerLoose/muons MuonLoose Muon
+  add Branch MuonFakeMergerMedium/muons MuonMedium Muon
+  add Branch MuonFakeMergerTight/muons MuonTight Muon
 
   add Branch JetEnergyScale/jets Jet Jet
   add Branch JetEnergyScalePUPPI/jets JetPUPPI Jet

@@ -672,11 +672,10 @@ def main():
     branchPhotonTight     = treeReader.UseBranch('PhotonTight')
 
     branchElectron        = treeReader.UseBranch('Electron')
-    # TO BE FIXED (replace by Loose when available)!!!
-    branchElectronMedium  = treeReader.UseBranch('ElectronMedium')
-    branchElectronLoose   = branchElectronMedium
-    branchElectronTight   = branchElectronMedium
-    # TO BE FIXED (replace by Tight when available)!!!
+    branchElectronLoose   = treeReader.UseBranch('ElectronLoose')
+    # TO BE FIXED (replace by Medium when available)!!!
+    branchElectronMedium  = branchElectronLoose
+    branchElectronTight   = treeReader.UseBranch('ElectronTight')
 
     branchMuon            = treeReader.UseBranch('Muon')
     branchMuonLoose       = treeReader.UseBranch('MuonLoose')
