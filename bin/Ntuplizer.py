@@ -281,14 +281,14 @@ class TreeProducer:
             self.gamma_idpass  [i] = 0             # DUMMY 
             self.gamma_isopass [i] = 0             # DUMMY
 
-            if self.gamma_reliso[i] < 0.3:
-               self.gamma_isopass[i] |= 1 << 0
+            if self.gamma_reliso[i] < 0.1:
+               self.gamma_isopass[i] |= 1 << 2
 
             if self.gamma_reliso[i] < 0.2:
                self.gamma_isopass[i] |= 1 << 1
 
-            if self.gamma_reliso[i] < 0.1:
-               self.gamma_isopass[i] |= 1 << 2
+            if self.gamma_reliso[i] < 0.3:
+               self.gamma_isopass[i] |= 1 << 0
 
             #if self.gamma_reliso[i] < 0.4:
             #   self.gamma_isopass[i] |= 1 << 3
@@ -324,14 +324,14 @@ class TreeProducer:
             self.elec_idpass  [i] = 0             # DUMMY 
             self.elec_isopass [i] = 0             # DUMMY
 
-            if self.elec_reliso[i] < 0.3:
-               self.elec_isopass[i] |= 1 << 0
+            if self.elec_reliso[i] < 0.1:
+               self.elec_isopass[i] |= 1 << 2
 
             if self.elec_reliso[i] < 0.2:
                self.elec_isopass[i] |= 1 << 1
 
-            if self.elec_reliso[i] < 0.1:
-               self.elec_isopass[i] |= 1 << 2
+            if self.elec_reliso[i] < 0.3:
+               self.elec_isopass[i] |= 1 << 0
 
             #if self.elec_reliso[i] < 0.4:
             #   self.elec_isopass[i] |= 1 << 3
@@ -367,17 +367,17 @@ class TreeProducer:
             self.muon_idpass  [i] = 0             # DUMMY 
             self.muon_isopass [i] = 0             # DUMMY
 
-            if self.muon_reliso[i] < 0.25:
-               self.muon_isopass[i] |= 1 << 0
+            if self.muon_reliso[i] < 0.15:
+               self.muon_isopass[i] |= 1 << 2
 
-            if self.muon_reliso[i] < 0.2:
+            if self.muon_reliso[i] < 0.20:
                self.muon_isopass[i] |= 1 << 1
 
-            if self.muon_reliso[i] < 0.15:
-              self.muon_isopass[i] |= 1 << 2
+            if self.muon_reliso[i] < 0.25:
+              self.muon_isopass[i] |= 1 << 0
 
             #if self.muon_reliso[i] < 0.4:
-            #   self.muon_isopass[i] |= 1 << 3
+            #   self.muon_isopass[i] |= 1 << 0
 
             # loop over ID collections
             for loose in muons_loose:
