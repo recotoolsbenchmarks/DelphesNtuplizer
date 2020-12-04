@@ -307,6 +307,46 @@ class TreeProducer:
                     self.gamma_idpass[i] |= 1 << 2
             i += 1
 
+        ## now add fake rates
+        for item in photons_loose:
+            if item.IsolationVar<0.:
+                self.gamma_pt      [i] = item.PT
+                self.gamma_eta     [i] = item.Eta
+                self.gamma_phi     [i] = item.Phi
+                self.gamma_mass    [i] = 0.
+                self.gamma_idvar   [i] = 0.            # DUMMY
+                self.gamma_reliso  [i] = item.IsolationVar
+                self.gamma_isopass [i] = 7             # DUMMY
+                self.gamma_idpass  [i] = 0
+                self.gamma_idpass[i] |= 1 << 0
+                i+=1
+
+        for item in photons_medium:
+            if item.IsolationVar<0.:
+                self.gamma_pt      [i] = item.PT
+                self.gamma_eta     [i] = item.Eta
+                self.gamma_phi     [i] = item.Phi
+                self.gamma_mass    [i] = 0.
+                self.gamma_idvar   [i] = 0.            # DUMMY
+                self.gamma_reliso  [i] = item.IsolationVar
+                self.gamma_isopass [i] = 7             # DUMMY
+                self.gamma_idpass  [i] = 0
+                self.gamma_idpass[i] |= 1 << 1
+                i+=1
+                
+        for item in photons_tight:
+            if item.IsolationVar<0.:
+                self.gamma_pt      [i] = item.PT
+                self.gamma_eta     [i] = item.Eta
+                self.gamma_phi     [i] = item.Phi
+                self.gamma_mass    [i] = 0.
+                self.gamma_idvar   [i] = 0.            # DUMMY
+                self.gamma_reliso  [i] = item.IsolationVar
+                self.gamma_isopass [i] = 7             # DUMMY
+                self.gamma_idpass  [i] = 0
+                self.gamma_idpass[i] |= 1 << 2
+                i+=1
+
         self.gamma_size[0] = i
 
 
@@ -350,6 +390,49 @@ class TreeProducer:
                     self.elec_idpass[i] |= 1 << 2
 
             i += 1
+
+        ## now add fake rates
+        for item in electrons_loose:
+            if item.IsolationVar<0.:
+                self.elec_pt      [i] = item.PT
+                self.elec_eta     [i] = item.Eta
+                self.elec_phi     [i] = item.Phi
+                self.elec_mass    [i] = 0.
+                self.elec_idvar   [i] = 0.            # DUMMY
+                self.elec_reliso  [i] = item.IsolationVar
+                self.elec_isopass [i] = 7             # DUMMY
+                self.elec_idpass  [i] = 0
+                self.elec_idpass[i] |= 1 << 0
+                i+=1
+
+        for item in electrons_medium:
+            if item.IsolationVar<0.:
+                self.elec_pt      [i] = item.PT
+                self.elec_eta     [i] = item.Eta
+                self.elec_phi     [i] = item.Phi
+                self.elec_mass    [i] = 0.
+                self.elec_idvar   [i] = 0.            # DUMMY
+                self.elec_reliso  [i] = item.IsolationVar
+                self.elec_isopass [i] = 7             # DUMMY
+                self.elec_idpass  [i] = 0
+                self.elec_idpass[i] |= 1 << 1
+                i+=1
+                
+        for item in electrons_tight:
+            if item.IsolationVar<0.:
+                self.elec_pt      [i] = item.PT
+                self.elec_eta     [i] = item.Eta
+                self.elec_phi     [i] = item.Phi
+                self.elec_mass    [i] = 0.
+                self.elec_idvar   [i] = 0.            # DUMMY
+                self.elec_reliso  [i] = item.IsolationVar
+                self.elec_isopass [i] = 7             # DUMMY
+                self.elec_idpass  [i] = 0
+                self.elec_idpass[i] |= 1 << 2
+                i+=1
+
+
+
         self.elec_size[0] = i
 
 
@@ -393,6 +476,47 @@ class TreeProducer:
                     self.muon_idpass[i] |= 1 << 2
 
             i += 1
+
+        ## now add fake rates
+        for item in muons_loose:
+            if item.IsolationVar<0.:
+                self.muon_pt      [i] = item.PT
+                self.muon_eta     [i] = item.Eta
+                self.muon_phi     [i] = item.Phi
+                self.muon_mass    [i] = 0.
+                self.muon_idvar   [i] = 0.            # DUMMY
+                self.muon_reliso  [i] = item.IsolationVar
+                self.muon_isopass [i] = 7             # DUMMY
+                self.muon_idpass  [i] = 0
+                self.muon_idpass[i] |= 1 << 0
+                i+=1
+
+        for item in muons_medium:
+            if item.IsolationVar<0.:
+                self.muon_pt      [i] = item.PT
+                self.muon_eta     [i] = item.Eta
+                self.muon_phi     [i] = item.Phi
+                self.muon_mass    [i] = 0.
+                self.muon_idvar   [i] = 0.            # DUMMY
+                self.muon_reliso  [i] = item.IsolationVar
+                self.muon_isopass [i] = 7             # DUMMY
+                self.muon_idpass  [i] = 0
+                self.muon_idpass[i] |= 1 << 1
+                i+=1
+                
+        for item in muons_tight:
+            if item.IsolationVar<0.:
+                self.muon_pt      [i] = item.PT
+                self.muon_eta     [i] = item.Eta
+                self.muon_phi     [i] = item.Phi
+                self.muon_mass    [i] = 0.
+                self.muon_idvar   [i] = 0.            # DUMMY
+                self.muon_reliso  [i] = item.IsolationVar
+                self.muon_isopass [i] = 7             # DUMMY
+                self.muon_idpass  [i] = 0
+                self.muon_idpass[i] |= 1 << 2
+                i+=1
+
         self.muon_size[0] = i
 
     #___________________________________________
@@ -517,22 +641,22 @@ class TreeProducer:
                     p4tot += p4
 
                     if const.Charge == 0:
-                	if const.PID == 22: neutralEmEnergy += const.E
-                	if const.PID == 0 : neutralHadEnergy += const.E
+                        if const.PID == 22: neutralEmEnergy += const.E
+                        if const.PID == 0 : neutralHadEnergy += const.E
                     else:
-                	if abs(const.PID) == 11: chargedEmEnergy += const.E
-                	elif abs(const.PID) != 13: chargedHadEnergy += const.E
+                        if abs(const.PID) == 11: chargedEmEnergy += const.E
+                        elif abs(const.PID) != 13: chargedHadEnergy += const.E
 
             corr = TLorentzVector()
             for r in rho:
                 if item.Eta > r.Edges[0] and item.Eta < r.Edges[1]:
                     corr = item.Area * r.Rho 
 
-	    neutralEmEnergy  -= corr.E()
-	    EmEnergy  = neutralEmEnergy + chargedEmEnergy
-	    
-	    #neutralHadEnergy  -= corr.E()
-	    HadEnergy = neutralHadEnergy + chargedHadEnergy
+            neutralEmEnergy  -= corr.E()
+            EmEnergy  = neutralEmEnergy + chargedEmEnergy
+            
+            #neutralHadEnergy  -= corr.E()
+            HadEnergy = neutralHadEnergy + chargedHadEnergy
 
             if EmEnergy > 0.:
                 neutralEmEF = neutralEmEnergy / EmEnergy
@@ -667,20 +791,17 @@ def main():
 
     branchPhoton          = treeReader.UseBranch('Photon')
     branchPhotonLoose     = treeReader.UseBranch('PhotonLoose')
-    # TO BE FIXED (replace by Medium when available)!!!
-    branchPhotonMedium    = branchPhotonLoose
+    branchPhotonMedium    = treeReader.UseBranch('PhotonMedium')
     branchPhotonTight     = treeReader.UseBranch('PhotonTight')
 
     branchElectron        = treeReader.UseBranch('Electron')
     branchElectronLoose   = treeReader.UseBranch('ElectronLoose')
-    # TO BE FIXED (replace by Medium when available)!!!
-    branchElectronMedium  = branchElectronLoose
+    branchElectronMedium  = treeReader.UseBranch('ElectronMedium')
     branchElectronTight   = treeReader.UseBranch('ElectronTight')
 
     branchMuon            = treeReader.UseBranch('Muon')
     branchMuonLoose       = treeReader.UseBranch('MuonLoose')
-    # TO BE FIXED (replace by Medium when available)!!!
-    branchMuonMedium      = branchMuonLoose
+    branchMuonMedium      = treeReader.UseBranch('MuonMedium')
     branchMuonTight       = treeReader.UseBranch('MuonTight')
 
     branchPuppiJet        = treeReader.UseBranch('JetPUPPI')
@@ -694,7 +815,7 @@ def main():
     branchPFCandidateCHS  = treeReader.UseBranch('ParticleFlowCandidateCHS')
 
     branchRho             = treeReader.UseBranch('Rho')
-    
+
     treeProducer = TreeProducer(debug)
 
     if nevents > 0:
@@ -717,10 +838,8 @@ def main():
         treeProducer.processElectrons(branchElectron, branchElectronLoose, branchElectronMedium, branchElectronTight)
         treeProducer.processMuons(branchMuon, branchMuonLoose, branchMuonMedium, branchMuonTight)
         treeProducer.processPhotons(branchPhoton, branchPhotonLoose, branchPhotonMedium, branchPhotonTight)
-        treeProducer.processCHSJets(branchCHSJet, branchRho)
         treeProducer.processPuppiJets(branchPuppiJet)
         treeProducer.processTaus(branchPuppiJet)
-        treeProducer.processPFMissingET(branchPFMissingET)
         treeProducer.processPuppiMissingET(branchPuppiMissingET)
 
         ## fill tree 
