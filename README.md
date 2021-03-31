@@ -75,7 +75,7 @@ As a result, the output size increases substantially compared to normal Delphes 
 To produce Delphes validation samples run this command (by changing the appropiate input GEN-SIM file of interest): 
 
 ```
-./DelphesCMSFWLite ../cards/CMS_PhaseII_200PU_v04VAL.tcl delphes.root /eos/cms/store/relval/CMSSW_10_3_0/RelValZMM_13/GEN-SIM-RECO/PU25ns_103X_upgrade2018_realistic_v7-v1/10000/50FEF759-6699-7344-82CE-894E8A724442.root
+./DelphesCMSFWLite ../cards/CMS_PhaseII_200PU_v07VAL.tcl delphes.root /eos/cms/store/relval/CMSSW_10_3_0/RelValZMM_13/GEN-SIM-RECO/PU25ns_103X_upgrade2018_realistic_v7-v1/10000/50FEF759-6699-7344-82CE-894E8A724442.root
 ```
 
 Produce Delphes flat trees
