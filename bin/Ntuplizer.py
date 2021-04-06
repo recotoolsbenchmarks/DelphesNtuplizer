@@ -344,7 +344,7 @@ class TreeProducer:
                 self.gamma_reliso  [i] = item.IsolationVar
                 self.gamma_isopass [i] = 7             # DUMMY
                 self.gamma_idpass  [i] = 0
-                self.gamma_idpass[i] |= 1 << 2
+                self.gamma_idpass  [i] |= 1 << 2
                 i+=1
 
         self.gamma_size[0] = i
@@ -520,7 +520,7 @@ class TreeProducer:
         self.muon_size[0] = i
 
     #___________________________________________
-    def processPuppiJets(self, jets):
+    def processPuppiJets(self, jets, jets_loose, jets_tight):
 
         i = 0
 
@@ -532,8 +532,21 @@ class TreeProducer:
             self.jetpuppi_mass    [i] = jetp4.M()
             self.jetpuppi_idpass  [i] = 0             # DUMMY 
 
+
+            # loop over ID collections
+            for loose in jets_loose:
+                if dr_match(item,loose,0.1):
+                    self.jetpuppi_idpass[i] |= 1 << 0
+
+            for tight in jets_tight:
+                if dr_match(item,tight,0.1):
+                    self.jetpuppi_idpass[i] |= 1 << 1
+
+
             ### JETID: Jet constituents seem to broken!! For now set all Jet ID to True TO BE FIXED ######
 
+            
+            '''
             # compute jet id by looping over jet constituents
             if self.debug : print '   new PUPPI jet: ', item.PT, item.Eta, item.Phi, item.Mass
 
@@ -590,16 +603,20 @@ class TreeProducer:
             self.jetpuppi_idpass[i] |= 1 << 0
             self.jetpuppi_idpass[i] |= 1 << 1
             self.jetpuppi_idpass[i] |= 1 << 2
+            '''
 
             #### BTagging
 
             self.jetpuppi_DeepJET [i] = 0.  ## some dummy value
+
             self.jetpuppi_btag[i] = item.BTag
-            
-            '''for j in range(3):
+            #print  jetp4.Pt(), jetp4.Eta(), jetp4.Phi(), self.jetpuppi_btag[i], self.jetpuppi_idpass[i]
+           
+            '''
+            for j in range(3):
                 if ( item.BTag & (1 << j) ):
                     self.jetpuppi_btag[i] |= 1 << j
-                    print 'jet', i, self.jetpuppi_btag[i] 
+                    print 'jet', i, j, item.BTag 
             '''
             i += 1
         self.jetpuppi_size[0] = i
@@ -805,14 +822,17 @@ def main():
     branchMuonTight       = treeReader.UseBranch('MuonTight')
 
     branchPuppiJet        = treeReader.UseBranch('JetPUPPI')
-    branchCHSJet          = treeReader.UseBranch('Jet')
+    branchPuppiJetLoose   = treeReader.UseBranch('JetPUPPILoose')
+    branchPuppiJetTight   = treeReader.UseBranch('JetPUPPITight')
+
+    #branchCHSJet          = treeReader.UseBranch('Jet')
 
     branchPuppiMissingET  = treeReader.UseBranch('PuppiMissingET')
-    branchPFMissingET     = treeReader.UseBranch('MissingET')
+    #branchPFMissingET     = treeReader.UseBranch('MissingET')
 
     # NEED these branches to access jet constituents
     branchPuppiCandidate  = treeReader.UseBranch('ParticleFlowCandidate')
-    branchPFCandidateCHS  = treeReader.UseBranch('ParticleFlowCandidateCHS')
+    #branchPFCandidateCHS  = treeReader.UseBranch('ParticleFlowCandidateCHS')
 
     branchRho             = treeReader.UseBranch('Rho')
 
@@ -838,7 +858,7 @@ def main():
         treeProducer.processElectrons(branchElectron, branchElectronLoose, branchElectronMedium, branchElectronTight)
         treeProducer.processMuons(branchMuon, branchMuonLoose, branchMuonMedium, branchMuonTight)
         treeProducer.processPhotons(branchPhoton, branchPhotonLoose, branchPhotonMedium, branchPhotonTight)
-        treeProducer.processPuppiJets(branchPuppiJet)
+        treeProducer.processPuppiJets(branchPuppiJet, branchPuppiJetLoose, branchPuppiJetTight)
         treeProducer.processTaus(branchPuppiJet)
         treeProducer.processPuppiMissingET(branchPuppiMissingET)
 
