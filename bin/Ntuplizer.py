@@ -537,10 +537,11 @@ class TreeProducer:
             for loose in jets_loose:
                 if dr_match(item,loose,0.1):
                     self.jetpuppi_idpass[i] |= 1 << 0
+                    self.jetpuppi_idpass[i] |= 1 << 1
 
             for tight in jets_tight:
                 if dr_match(item,tight,0.1):
-                    self.jetpuppi_idpass[i] |= 1 << 1
+                    self.jetpuppi_idpass[i] |= 1 << 2
 
 
             ### JETID: Jet constituents seem to broken!! For now set all Jet ID to True TO BE FIXED ######
