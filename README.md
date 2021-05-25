@@ -41,14 +41,14 @@ This package requires Delphes to be installed, and CMSSW for gcc, ROOT, FWLite a
 
 ```
 cd DelphesNtuplizer
-cmsrel CMSSW_10_0_5
-cd CMSSW_10_0_5
+cmsrel CMSSW_11_2_0_pre9
+cd CMSSW_11_2_0_pre9
 cmsenv
 cd ..
 git clone https://github.com/delphes/delphes.git
 cd delphes
 ./configure
-sed -i -e 's/c++0x/c++1y/g' Makefile
+sed -i -e 's/c++0x/c++17/g' Makefile
 make -j 10
 cp libDelphes.so ..
 ```
@@ -64,7 +64,7 @@ Produce validation Delphes samples
 For producing new validation samples you need to set-up the proper environment
 
 ```
-cd CMSSW_10_0_5
+cd CMSSW_11_2_0_pre9
 cmsenv
 cd ../delphes
 ```
@@ -75,7 +75,7 @@ As a result, the output size increases substantially compared to normal Delphes 
 To produce Delphes validation samples run this command (by changing the appropiate input GEN-SIM file of interest): 
 
 ```
-./DelphesCMSFWLite ../cards/CMS_PhaseII_200PU_Snowmass2021_v0.tcl delphes.root /eos/cms/store/relval/CMSSW_11_2_0_pre9/RelValZMM_14/GEN-SIM-RECO/PU_112X_mcRun4_realistic_v4_2026D66PU200-v1/00000/d3b9f895-0c25-4171-9c21-d6cc9b365891.root
+./DelphesCMSFWLite ../DelphesNtuplizer/cards/CMS_PhaseII_200PU_Snowmass2021_v0.tcl delphes.root /eos/cms/store/relval/CMSSW_11_2_0_pre9/RelValZMM_14/GEN-SIM-RECO/PU_112X_mcRun4_realistic_v4_2026D66PU200-v1/00000/d3b9f895-0c25-4171-9c21-d6cc9b365891.root
 ```
 
 Produce Delphes flat trees
@@ -84,7 +84,7 @@ Produce Delphes flat trees
 Set up the proper environment:
 
 ```
-cd CMSSW_10_0_5
+cd CMSSW_11_2_0_pre9
 cmsenv
 cd ..
 ```
