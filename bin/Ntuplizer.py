@@ -24,7 +24,14 @@ class TreeProducer:
          self.vtx_pt2          = array( 'f', self.maxn*[ 0. ] )
          
          ## put dummy value for now
-         self.true_int         = array( 'i', [ -1 ] )
+         self.true_int          = array( 'i', [ -1 ] )
+
+         ## main MC weight
+         self.genweight         = array( 'f', [ 0 ] )
+         
+         ## variation event weights (from "LHEEventProduct")
+         self.lheweight_size   = array( 'i', [ 0 ] )
+         self.lheweight_val    = array( 'f', self.maxn*[ 0 ] )
 
          self.genpart_size     = array( 'i', [ 0 ] )
          self.genpart_pid      = array( 'i', self.maxn*[ 0 ] )
@@ -125,6 +132,10 @@ class TreeProducer:
          self.t.Branch( "trueInteractions",self.true_int, "trueInteractions/I")
          self.t.Branch( "npuVertices",self.vtx_size, "npuVertices/I")
          self.t.Branch( "vtx_pt2",self.vtx_pt2, "vtx_pt2[vtx_size]/F")
+
+         self.t.Branch( "genweight",self.genweight, "genweight/F")
+         self.t.Branch( "lheweight_size",self.lheweight_size, "lheweight_size/I")
+         self.t.Branch( "lheweight_val",self. lheweight_val, "lheweight_val[lheweight_size]/I")
 
          self.t.Branch( "genpart_size",self.genpart_size, "genpart_size/I")
          self.t.Branch( "genpart_pid",self. genpart_pid, "genpart_pid[genpart_size]/I")
@@ -229,6 +240,26 @@ class TreeProducer:
             self.vtx_pt2[i] = item.SumPT2
             i += 1
         self.vtx_size[0] = i
+
+
+    #___________________________________________
+    def processWeights(self, event, weights):
+        i = 0
+        
+        self.genweight[0] = event[0].Weight
+        for item in weights:
+            self.lheweight_val[i] = item.Weight
+            i += 1
+        self.lheweight_size[0] = i
+
+
+        '''
+        for item in vertices:
+            self.vtx_pt2[i] = item.SumPT2
+            i += 1
+        self.vtx_size[0] = i
+        '''
+
 
     #___________________________________________
     def processGenParticles(self, particles):
@@ -710,6 +741,7 @@ class TreeProducer:
         ##### For now un-tagged tau's are simply jets for now (TO BE FIXED)
 
         i = 0
+        #print '    --- new event ----'
         for item in jets:
 
             jetp4 = item.P4()
@@ -727,6 +759,7 @@ class TreeProducer:
             #    self.tau_isopass    [i] |= 1 << 0
 
             self.tau_isopass[i] = item.TauTag
+            #print jetp4.Pt(), item.TauTag, item.TauWeight
 
             #for j in range(4):
             #    if ( item.TauTag & (1 << j) ):
@@ -802,6 +835,9 @@ def main():
     ## for now only M for electrons, LT for muons and LT for photons are defined !!
     ## should dervie new parameterisations for other working points
 
+    branchEvent           = treeReader.UseBranch('Event')   
+    branchWeight          = treeReader.UseBranch('Weight')   
+
     branchVertex          = treeReader.UseBranch('Vertex')   
     branchParticle        = treeReader.UseBranch('Particle') 
     branchGenJet          = treeReader.UseBranch('GenJet')   
@@ -852,6 +888,7 @@ def main():
             print ' ... processed {} events ...'.format(entry+1)
 
         treeProducer.processEvent(entry)
+        treeProducer.processWeights(branchEvent, branchWeight)
         treeProducer.processVertices(branchVertex)
         treeProducer.processGenParticles(branchParticle)
         treeProducer.processGenJets(branchGenJet)
