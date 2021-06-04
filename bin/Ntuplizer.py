@@ -22,6 +22,9 @@ class TreeProducer:
 
          self.vtx_size         = array( 'i', [ 0 ] )
          self.vtx_pt2          = array( 'f', self.maxn*[ 0. ] )
+         self.vtx_x            = array( 'f', self.maxn*[0. ])  
+         self.vtx_y            = array( 'f', self.maxn*[0. ])  
+         self.vtx_z            = array( 'f', self.maxn*[0. ])  
          
          ## put dummy value for now
          self.true_int          = array( 'i', [ -1 ] )
@@ -117,6 +120,17 @@ class TreeProducer:
          self.jetchs_DeepJET      = array( 'f', self.maxn*[ 0. ] )
          self.jetchs_btag         = array( 'i', self.maxn*[ 0 ] )
 
+         self.fatjet_size                   = array('i', [0 ])
+         self.fatjet_pt                     = array('f', self.maxn*[0. ])
+         self.fatjet_eta                    = array('f', self.maxn*[0. ])
+         self.fatjet_phi                    = array('f', self.maxn*[0. ])
+         self.fatjet_mass                   = array('f', self.maxn*[0. ])
+         self.fatjet_tau1                   = array('f', self.maxn*[0. ])
+         self.fatjet_tau2                   = array('f', self.maxn*[0. ])
+         self.fatjet_tau3                   = array('f', self.maxn*[0. ])
+         self.fatjet_tau4                   = array('f', self.maxn*[0. ])
+         self.fatjet_msoftdrop              = array('f', self.maxn*[0. ])
+
          self.metpuppi_size         = array( 'i', [ 0 ] )
          self.metpuppi_pt           = array( 'f', self.maxn*[ 0. ] )
          self.metpuppi_phi          = array( 'f', self.maxn*[ 0. ] )
@@ -132,6 +146,9 @@ class TreeProducer:
          self.t.Branch( "trueInteractions",self.true_int, "trueInteractions/I")
          self.t.Branch( "npuVertices",self.vtx_size, "npuVertices/I")
          self.t.Branch( "vtx_pt2",self.vtx_pt2, "vtx_pt2[vtx_size]/F")
+         self.t.Branch( "vtx_x", self.vtx_x, "vtx_x[vtx_size]/F") 
+         self.t.Branch( "vtx_y", self.vtx_y, "vtx_y[vtx_size]/F") 
+         self.t.Branch( "vtx_z", self.vtx_z, "vtx_z[vtx_size]/F") 
 
          self.t.Branch( "genweight",self.genweight, "genweight/F")
          self.t.Branch( "lheweight_size",self.lheweight_size, "lheweight_size/I")
@@ -221,6 +238,18 @@ class TreeProducer:
          self.t.Branch( "jetchs_DeepJET",self.jetchs_DeepJET,"jetchs_DeepJET[jetchs_size]/F")
          self.t.Branch( "jetchs_btag",self.jetchs_btag,"jetchs_btag[jetchs_size]/I")
 
+         self.t.Branch("fatjet_size", self.fatjet_size, "fatjet_size/I")
+         self.t.Branch("fatjet_pt", self.fatjet_pt, "fatjet_pt[fatjet_size]/F")
+         self.t.Branch("fatjet_eta", self.fatjet_eta, "fatjet_eta[fatjet_size]/F")
+         self.t.Branch("fatjet_phi", self.fatjet_phi, "fatjet_phi[fatjet_size]/F")
+         self.t.Branch("fatjet_mass", self.fatjet_mass, "fatjet_mass[fatjet_size]/F")
+         self.t.Branch("fatjet_pt", self.fatjet_pt, "fatjet_pt[fatjet_size]/F")
+         self.t.Branch("fatjet_tau1", self.fatjet_tau1, "fatjet_tau1[fatjet_size]/F")
+         self.t.Branch("fatjet_tau2", self.fatjet_tau2, "fatjet_tau2[fatjet_size]/F")
+         self.t.Branch("fatjet_tau3", self.fatjet_tau3, "fatjet_tau3[fatjet_size]/F")
+         self.t.Branch("fatjet_tau4", self.fatjet_tau4, "fatjet_tau4[fatjet_size]/F")
+         self.t.Branch("fatjet_msoftdrop", self.fatjet_msoftdrop, "fatjet_msoftdrop[fatjet_size]/F")
+
          self.t.Branch( "metpuppi_size",self.metpuppi_size, "metpuppi_size/I")
          self.t.Branch( "metpuppi_pt",self. metpuppi_pt, "metpuppi_pt[metpuppi_size]/F")
          self.t.Branch( "metpuppi_phi",self.metpuppi_phi, "metpuppi_phi[metpuppi_size]/F")
@@ -238,6 +267,9 @@ class TreeProducer:
         i = 0
         for item in vertices:
             self.vtx_pt2[i] = item.SumPT2
+            self.vtx_x[i] = item.X   #Gamze
+            self.vtx_y[i] = item.Y   #Gamze
+            self.vtx_z[i] = item.Z   #Gamze
             i += 1
         self.vtx_size[0] = i
 
@@ -734,6 +766,27 @@ class TreeProducer:
 
             i += 1
         self.jetchs_size[0] = i
+    
+    #-------------------------------------------    
+    def processFatJets(self, jets):
+        i = 0
+        
+        for item in jets:
+            jetp4 = item.P4()
+            softDrop = TLorentzVector() 
+            softDrop = item.SoftDroppedJet
+            self.fatjet_pt                     [i] = jetp4.Pt()
+            self.fatjet_eta                    [i] = jetp4.Eta()
+            self.fatjet_phi                    [i] = jetp4.Phi()
+            self.fatjet_mass                   [i] = jetp4.M()
+            self.fatjet_tau1                   [i] = item.Tau[0]            
+            self.fatjet_tau2                   [i] = item.Tau[1]            
+            self.fatjet_tau3                   [i] = item.Tau[2]            
+            self.fatjet_tau4                   [i] = item.Tau[3]            
+            self.fatjet_msoftdrop              [i] = softDrop.M()      
+        
+            i += 1
+        self.fatjet_size[0] = i
 
 
     #___________________________________________
@@ -861,6 +914,7 @@ def main():
     branchPuppiJet        = treeReader.UseBranch('JetPUPPI')
     branchPuppiJetLoose   = treeReader.UseBranch('JetPUPPILoose')
     branchPuppiJetTight   = treeReader.UseBranch('JetPUPPITight')
+    branchFatJet          = treeReader.UseBranch('JetPUPPIAK8') 
 
     #branchCHSJet          = treeReader.UseBranch('Jet')
 
@@ -897,6 +951,7 @@ def main():
         treeProducer.processMuons(branchMuon, branchMuonLoose, branchMuonMedium, branchMuonTight)
         treeProducer.processPhotons(branchPhoton, branchPhotonLoose, branchPhotonMedium, branchPhotonTight)
         treeProducer.processPuppiJets(branchPuppiJet, branchPuppiJetLoose, branchPuppiJetTight)
+        treeProducer.processFatJets(branchFatJet)  
         treeProducer.processTaus(branchPuppiJet)
         treeProducer.processPuppiMissingET(branchPuppiMissingET)
 
